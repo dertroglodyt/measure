@@ -1,11 +1,11 @@
 package de.hdc.kotlin.measure
 
-import com.danneu.result.Result
+import com.danneu.result.*
 
 /*
  * Combines a value with a physical unit.
  */
-data class Measure<T : SIUnit> (val value: Double, val unit: MeasureUnit<T>): Number(), Comparable<Measure<T>> {
+data class Measure<T : Quantity> (val value: Double, val unit: MeasureUnit<T>): Number(), Comparable<Measure<T>> {
 
   constructor (value: Double, prefix: Prefix, unit: MeasureUnit<T>)
     : this(value, MeasureUnit(prefix, unit.unit))
@@ -17,11 +17,11 @@ data class Measure<T : SIUnit> (val value: Double, val unit: MeasureUnit<T>): Nu
     val MIN_VALUE = Measure(Double.MIN_VALUE, UNITLESS)
     val MAX_VALUE = Measure(Double.MAX_VALUE, UNITLESS)
     val POSITIVE_INFINITY = Measure(Double.POSITIVE_INFINITY, MeasureUnit(Prefix.NONE
-        , DerivedUnit("POSITIVE_INFINITY", "POSITIVE_INFINITY", SI_COMBINED(Quantity()))))
+        , DerivedUnit("POSITIVE_INFINITY", "POSITIVE_INFINITY", SI_COMBINED(UNKNOWN()))))
     val NEGATIVE_INFINITY = Measure(Double.NEGATIVE_INFINITY, MeasureUnit(Prefix.NONE
-        , DerivedUnit("NEGATIVE_INFINITY", "NEGATIVE_INFINITY", SI_COMBINED(Quantity()))))
+        , DerivedUnit("NEGATIVE_INFINITY", "NEGATIVE_INFINITY", SI_COMBINED(UNKNOWN()))))
     val NaN = Measure(Double.NaN, MeasureUnit(Prefix.NONE
-        , DerivedUnit("NaN", "NaN", SI_COMBINED(Quantity()))))
+        , DerivedUnit("NaN", "NaN", SI_COMBINED(UNKNOWN()))))
   }
 
   private fun testInvalid(d: Double): Boolean {
@@ -149,7 +149,7 @@ data class Measure<T : SIUnit> (val value: Double, val unit: MeasureUnit<T>): Nu
     return Measure(r, unit)
   }
 
-  fun scalar(measure: Measure<SI_UNITLESS>): Measure<T> {
+  fun scalar(measure: Measure<Q_UNITLESS>): Measure<T> {
     if (testInvalid(value) || testInvalid(measure.value)) {
       LOG.severe("Multiplication overflow! ${toString()} + $measure")
       throw NumberFormatException()
@@ -165,7 +165,7 @@ data class Measure<T : SIUnit> (val value: Double, val unit: MeasureUnit<T>): Nu
     return Measure(r, unit)
   }
 
-  fun <U : SIUnit> times(measure: Measure<U>): Measure<SI_COMBINED> {
+  fun <U : Quantity> times(measure: Measure<U>): Measure<UNKNOWN> {
     if (testInvalid(value) || testInvalid(measure.value)) {
       LOG.severe("Multiplication overflow! ${toString()} + $measure")
       throw NumberFormatException()
@@ -182,7 +182,7 @@ data class Measure<T : SIUnit> (val value: Double, val unit: MeasureUnit<T>): Nu
     return Measure(r, mu)
   }
 
-  fun <U : SIUnit> div(measure: Measure<U>): Measure<SI_COMBINED> {
+  fun <U : Quantity> div(measure: Measure<U>): Measure<UNKNOWN> {
     if (measure.value == 0.0) {
       LOG.warning("Division by zero! ${toString()}/$measure")
       return NaN

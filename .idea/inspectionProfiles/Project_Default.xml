@@ -5,5 +5,8 @@
       <option name="m_checkForeachParameters" value="false" />
     </inspection_tool>
     <inspection_tool class="AssignmentToNull" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="ClassName" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="namePattern" value="[A-Z][A-Za-z\d_]*" />
+    </inspection_tool>
   </profile>
 </component>

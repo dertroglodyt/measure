@@ -1,10 +1,6 @@
 package de.hdc.kotlin.measure
 
-enum class BaseQuantity {
-  AMOUNT, ELECTRIC_CURRENT, LENGTH, LUMINOUS_INTENSITY, MASS, THERMODYNAMIC_TEMPERATURE, TIME
-}
-
-data class Quantity(
+open class Quantity(
     val amount: Int = 0,
     val electricCurrent: Int = 0,
     val length: Int = 0,
@@ -105,23 +101,49 @@ data class Quantity(
     return super.hashCode()
   }
 
-  fun times(q: Quantity): Quantity {
-    return Quantity(amount + q.amount
+  fun times(q: Quantity): UNKNOWN {
+    return UNKNOWN(Quantity(amount + q.amount
         , electricCurrent + q.electricCurrent
         , length + q.length
         , luminousIntensity + q.luminousIntensity
         , mass + q.mass
         , thermodynamicTemperature + q.thermodynamicTemperature
-        , time + q.time)
+        , time + q.time))
   }
 
-  fun div(q: Quantity): Quantity {
-    return Quantity(amount - q.amount
+  fun div(q: Quantity): UNKNOWN {
+    return UNKNOWN(Quantity(amount - q.amount
         , electricCurrent - q.electricCurrent
         , length - q.length
         , luminousIntensity - q.luminousIntensity
         , mass - q.mass
         , thermodynamicTemperature - q.thermodynamicTemperature
-        , time - q.time)
+        , time - q.time))
   }
 }
+
+class UNKNOWN(q: Quantity = Quantity())
+  : Quantity(q.amount, q.electricCurrent, q.length, q.luminousIntensity, q.mass, q.thermodynamicTemperature, q.time)
+object Q_UNITLESS: Quantity(mass = 1, length = -1, time = -2)
+
+object AMOUNT: Quantity(amount = 1)
+object ELECTRIC_CURRENT: Quantity(electricCurrent = 1)
+object LENGTH: Quantity(length = 1)
+object LUMINOUS_INTENSITY: Quantity(luminousIntensity = 1)
+object MASS: Quantity(mass = 1)
+object THERMODYNAMIC_TEMPERATURE: Quantity(thermodynamicTemperature = 1)
+object TIME: Quantity(time = 1)
+
+object AREA: Quantity(length = 2)
+object VOLUME: Quantity(length = 3)
+object ANGLE: Quantity()
+object FREQUENCY: Quantity()
+object PRESSURE: Quantity(mass = 1, length = -1, time = -2)
+object FORCE: Quantity(mass = 1, length = 1, time = -2)
+object WORK: Quantity(mass = 1, length = 2, time = -2)
+object POWER: Quantity(mass = 1, length = 2, time = -3)
+
+object VELOCITY: Quantity(length = 1, time = -1)
+object Q_ACCELERATION: Quantity(length = 1, time = -2)
+
+
