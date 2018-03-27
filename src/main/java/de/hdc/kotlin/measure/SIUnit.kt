@@ -35,24 +35,10 @@ open class DerivedUnit<out T: Quantity>(
     val increment: Double = 0.0) {
 
   override fun toString(): String = symbol
+
+  override fun equals(other: Any?): Boolean = (other is DerivedUnit<*>)
+      && (baseUnit.quantity == other.baseUnit.quantity) && (multiplier == other.multiplier) && (increment == other.increment)
+
+  override fun hashCode(): Int = super.hashCode()
+
 }
-
-class DU_COMBINED(q: UNKNOWN) : DerivedUnit<UNKNOWN>("", q.toString(), SI_COMBINED(q))
-
-object DU_UNITLESS : DerivedUnit<Q_UNITLESS>("", "", SI_UNITLESS)
-object DU_MOLE : DerivedUnit<AMOUNT>("Mole", "m", SI_MOLE)
-object DU_AMPERE : DerivedUnit<ELECTRIC_CURRENT>("Ampere", "A", SI_AMPERE)
-object DU_METER : DerivedUnit<LENGTH>("Meter", "m", SI_METER)
-object DU_SQUARE_METER : DerivedUnit<AREA>("Square Meter", "m²", SI_AREA)
-object DU_CUBIC_METER : DerivedUnit<VOLUME>("Cubic Meter", "m³", SI_VOLUME)
-object DU_CANDELA : DerivedUnit<LUMINOUS_INTENSITY>("Candela", "cd", SI_CANDELA)
-object DU_GRAM : DerivedUnit<MASS>("Gram", "g", SI_GRAM)
-object DU_KELVIN : DerivedUnit<THERMODYNAMIC_TEMPERATURE>("Kelvin", "K", SI_KELVIN)
-object DU_SECOND : DerivedUnit<TIME>("Second", "s", SI_SECOND)
-object DU_RADIAN : DerivedUnit<ANGLE>("Radian", "rad", SI_RADIAN)
-object DU_STERADIAN : DerivedUnit<ANGLE>("Steradian", "sr", SI_STERADIAN)
-object DU_HERTZ : DerivedUnit<FREQUENCY>("Hertz", "Hz", SI_HERTZ)
-object DU_NEWTON : DerivedUnit<FORCE>("Newton", "N", SI_NEWTON)
-object DU_PASCAL : DerivedUnit<PRESSURE>("Pascal", "PA", SI_PASCAL)
-object DU_JOULE : DerivedUnit<WORK>("Joule", "J", SI_JOULE)
-object DU_WATT : DerivedUnit<POWER>("Watt", "W", SI_WATT)

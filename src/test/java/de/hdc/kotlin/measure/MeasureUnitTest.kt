@@ -11,19 +11,21 @@ class MeasureUnitTest {
   @Test
   fun main() {
     // test equals()
-    assertFalse(GRAM.equals(Unit))
-    assertTrue(GRAM.equals(GRAM))
-    assertFalse(GRAM.equals(KILO_GRAM))
-    assertTrue(KILO_GRAM.equals(MeasureUnit(KILO, DU_GRAM)))
+    assertNotEquals(GRAM, Unit)
+    assertEquals(GRAM, GRAM)
+    assertNotEquals(GRAM, KILO_GRAM)
+    assertEquals(KILO_GRAM, MeasureUnit(KILO, GRAM))
 
-    assertTrue(KILO_GRAM.equals(MeasureUnit(KILO, DU_COMBINED(UNKNOWN(Quantity(0, 0, 0, 0, 1, 0, 0))))))
-    assertFalse(KILO_GRAM.equals(MeasureUnit(NONE, DU_COMBINED(UNKNOWN(Quantity(0, 0, 0, 0, 1, 0, 0))))))
+    assertEquals(GRAM, COMBINED(UNKNOWN(Quantity(mass = 1))))
 
-    assertTrue(MeasureUnit(KILO, DU_COMBINED(UNKNOWN(Quantity(0, 0, 0, 0, 1, 0, 0)))).equals(KILO_GRAM))
-    assertFalse(MeasureUnit(NONE, DU_COMBINED(UNKNOWN(Quantity(0, 0, 0, 0, 1, 0, 0)))).equals(KILO_GRAM))
+    assertEquals(KILO_GRAM, MeasureUnit(KILO, COMBINED(UNKNOWN(Quantity(mass = 1)))))
+    assertNotEquals(KILO_GRAM, MeasureUnit(NONE, COMBINED(UNKNOWN(Quantity(mass = 1)))))
 
-    assertTrue(MeasureUnit(KILO, DU_COMBINED(UNKNOWN(Quantity(0, -2, 0, 0, 1, 0, 0))))
-        .equals(MeasureUnit(KILO, DU_COMBINED(UNKNOWN(Quantity(0, -2, 0, 0, 1, 0, 0))))))
+    assertEquals(MeasureUnit(KILO, COMBINED(UNKNOWN(Quantity(mass = 1)))), KILO_GRAM)
+    assertNotEquals(MeasureUnit(NONE, COMBINED(UNKNOWN(Quantity(mass = 1)))), KILO_GRAM)
+
+    assertEquals(MeasureUnit(KILO, COMBINED(UNKNOWN(Quantity(electricCurrent = -2, mass = 1))))
+        , MeasureUnit(KILO, COMBINED(UNKNOWN(Quantity(electricCurrent = -2, mass = 1)))))
 
     // Test isEquivalentTo()
     assertFalse(GRAM.isEquivalentTo(METER))
@@ -31,8 +33,8 @@ class MeasureUnitTest {
     assertTrue(GRAM.isEquivalentTo(KILO_GRAM))
     assertTrue(METER.isEquivalentTo(AU))
 
-    assertTrue(MeasureUnit(KILO, DU_COMBINED(UNKNOWN(Quantity(0, -2, 0, 0, 1, 0, 0))))
-        .isEquivalentTo(MeasureUnit(KILO, DU_COMBINED(UNKNOWN(Quantity(0, -2, 0, 0, 1, 0, 0))))))
+    assertTrue(MeasureUnit(KILO, COMBINED(UNKNOWN(Quantity(electricCurrent = -2, mass = 1))))
+        .isEquivalentTo(MeasureUnit(KILO, COMBINED(UNKNOWN(Quantity(electricCurrent = -2, mass = 1))))))
 
 
     // Test valueOf()

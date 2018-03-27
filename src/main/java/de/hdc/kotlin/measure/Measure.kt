@@ -35,11 +35,11 @@ data class Measure<T : Quantity> (val value: Double, val unit: MeasureUnit<T>): 
     return unit.unit.baseUnit.quantity
   }
 
-  fun <U : T> convertTo(measureUnit: MeasureUnit<U>): Measure<U> {
-    if (measureUnit.equals(unit)) {
+  fun <U: T> convertTo(measureUnit: MeasureUnit<U>): Measure<U> {
+    if (measureUnit == unit) {
       return Measure(value, measureUnit)
     }
-    if (value.equals(Double.NaN)) {
+    if (value == Double.NaN) {
       LOG.warning("Division input is not a number! ${toString()} to $measureUnit")
       throw NumberFormatException()
     }
@@ -92,8 +92,8 @@ data class Measure<T : Quantity> (val value: Double, val unit: MeasureUnit<T>): 
     return Measure(r, unit)
   }
 
-  fun <U : T> plus(measure: Measure<U>): Measure<T> {
-    if (measure.unit.equals(unit)) {
+  operator fun <U: T>plus(measure: Measure<U>): Measure<T> {
+    if (measure.unit == unit) {
       val m: Double = value.plus(measure.value)
       return Measure(m, unit)
     }
@@ -112,8 +112,8 @@ data class Measure<T : Quantity> (val value: Double, val unit: MeasureUnit<T>): 
     return Measure(r, unit)
   }
 
-  fun <U : T> minus(measure: Measure<U>): Measure<T> {
-    if (measure.unit.equals(unit)) {
+  operator fun <U: T> minus(measure: Measure<U>): Measure<T> {
+    if (measure.unit == unit) {
       val m: Double = value.minus(measure.value)
       return Measure(m, unit)
     }
@@ -127,22 +127,6 @@ data class Measure<T : Quantity> (val value: Double, val unit: MeasureUnit<T>): 
 
     if (testInvalid(r)) {
       LOG.severe("Subtraction overflow! ${toString()} + $measure")
-      throw NumberFormatException()
-    }
-
-    return Measure(r, unit)
-  }
-
-  fun scalar(scalar: Double): Measure<T> {
-    if (testInvalid(value)) {
-      LOG.severe("Multiplication overflow! ${toString()} * $scalar")
-      throw NumberFormatException()
-    }
-
-    val r = value.times(scalar)
-
-    if (testInvalid(r)) {
-      LOG.severe("Multiplication overflow! ${toString()} * $scalar")
       throw NumberFormatException()
     }
 
@@ -165,7 +149,23 @@ data class Measure<T : Quantity> (val value: Double, val unit: MeasureUnit<T>): 
     return Measure(r, unit)
   }
 
-  fun <U : Quantity> times(measure: Measure<U>): Measure<UNKNOWN> {
+  operator fun times(scalar: Double): Measure<T> {
+    if (testInvalid(value)) {
+      LOG.severe("Multiplication overflow! ${toString()} * $scalar")
+      throw NumberFormatException()
+    }
+
+    val r = value.times(scalar)
+
+    if (testInvalid(r)) {
+      LOG.severe("Multiplication overflow! ${toString()} * $scalar")
+      throw NumberFormatException()
+    }
+
+    return Measure(r, unit)
+  }
+
+  operator fun <U: Quantity> times(measure: Measure<U>): Measure<UNKNOWN> {
     if (testInvalid(value) || testInvalid(measure.value)) {
       LOG.severe("Multiplication overflow! ${toString()} + $measure")
       throw NumberFormatException()
@@ -182,7 +182,7 @@ data class Measure<T : Quantity> (val value: Double, val unit: MeasureUnit<T>): 
     return Measure(r, mu)
   }
 
-  fun <U : Quantity> div(measure: Measure<U>): Measure<UNKNOWN> {
+  operator fun <U: Quantity> div(measure: Measure<U>): Measure<UNKNOWN> {
     if (measure.value == 0.0) {
       LOG.warning("Division by zero! ${toString()}/$measure")
       return NaN
@@ -204,7 +204,7 @@ data class Measure<T : Quantity> (val value: Double, val unit: MeasureUnit<T>): 
   }
 
   override fun toString(): String {
-    return value.toString() + if (unit.toString() == "") "" else " " + unit.toString()
+    return pretty(this)
   }
 
   override fun compareTo(other: Measure<T>): Int {

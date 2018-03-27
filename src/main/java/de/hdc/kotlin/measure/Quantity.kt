@@ -124,7 +124,8 @@ open class Quantity(
 
 class UNKNOWN(q: Quantity = Quantity())
   : Quantity(q.amount, q.electricCurrent, q.length, q.luminousIntensity, q.mass, q.thermodynamicTemperature, q.time)
-object Q_UNITLESS: Quantity(mass = 1, length = -1, time = -2)
+
+object Q_UNITLESS: Quantity()
 
 object AMOUNT: Quantity(amount = 1)
 object ELECTRIC_CURRENT: Quantity(electricCurrent = 1)

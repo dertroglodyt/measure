@@ -10,7 +10,7 @@ class MeasureTest {
   fun main() {
     // test convertTo()
     assertEquals(Measure(1.0, MINUTE), Measure(60.0, SECOND).convertTo(MINUTE))
-    assertEquals(Measure(1000.0, MINUTE), Measure(60.0, MeasureUnit(KILO, DU_SECOND)).convertTo(MINUTE))
+    assertEquals(Measure(1000.0, MINUTE), Measure(60.0, MeasureUnit(KILO, SECOND)).convertTo(MINUTE))
 
     // test reciprocal()
     // must throw exception
@@ -28,10 +28,14 @@ class MeasureTest {
 
 
     // test plus()
+    assertEquals("   5,000 kg", (Measure(2.0, KILO_GRAM) + Measure(3.0, KILO_GRAM)).toString())
     // test minus()
     // test scalar(Double)
     // test scalar(Measure<SI_UNITLESS>)
     // test times()
+    assertEquals("   6,000 km^2", (Measure(2000.0, METER) * Measure(3.0, KILO_METER)).toString())
+    assertEquals("   6,000 kg", (Measure(3.0, KILO_GRAM) * 2.0).toString())
+    assertEquals("   6,000 kg^2", (Measure(2.0, KILO_GRAM) * Measure(3.0, KILO_GRAM)).toString())
     // test div()
     // test toString()
     assertEquals("1.23", Measure(1.23, UNITLESS).toString())

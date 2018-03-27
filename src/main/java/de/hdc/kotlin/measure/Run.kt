@@ -1,7 +1,7 @@
 package de.hdc.kotlin.measure
 
 //import kotlin.reflect.full.*
-import java.util.logging.Logger
+import java.util.logging.*
 
 /*
  * unwrap companion class to enclosing class given a Java Class
@@ -38,7 +38,7 @@ fun main(args: Array<String>) {
   //val d = Measure(11.0, DAY)
 
     println("g: " + g.toString())
-    println("g*2.0: " + g.scalar(2.0))
+    println("g*2.0: " + g* 2.0)
     println("sc: " + sc.toString())
     println("g/sc: " + g.div(sc))
     assert(g.div(sc).toString().equals("4600.0 g"))
@@ -49,7 +49,7 @@ fun main(args: Array<String>) {
     println("kg/t: " + kg.div(t))
 //    println("t: " + t.div(d))
     println(t.scalar(Measure(2.0, UNITLESS)))
-    println(t.scalar(2.0))
+    println(t * 2.0)
     println()
     println("t->g " + t.convertTo(GRAM).toString())
     println(Measure(10.0, Prefix.KILO, METER))
