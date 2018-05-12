@@ -1,10 +1,12 @@
-package de.hdc.kotlin.measure
+package de.hdc.measure
 
-import org.junit.*
-import org.junit.Assert.*
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 
 //todo
 class QuantityTest {
+
+  @Test
   fun main() {
     // test toString()
     // all values == 0 returns an empty string
@@ -26,21 +28,21 @@ class QuantityTest {
     // Test equals()
     assertEquals(Quantity(0, 1, 2, 3, -1, -2, -3), Quantity(0, 1, 2, 3, -1, -2, -3))
     assertEquals(Quantity(), Quantity(0, 0, 0, 0, 0, 0, 0))
+    assertFalse(Quantity(0, 1, 2, 3, -1, -2, -3) == Quantity())
     assertFalse(Quantity(0, 1, 2, 3, -1, -2, -3).equals(Quantity()))
     assertFalse(Quantity(0, 1, 2, 3, -1, -2, -3).equals(Unit))
 
-
     // Test times()
-    assertEquals("mol^2·A^2·m^2·cd^2·g^2·K^2·s^2"
-        , Quantity(2, 2, 2, 2, 2, 2, 2).times(Quantity()).toString())
+    assertTrue("mol^2·A^2·m^2·cd^2·g^2·K^2·s^2".equals(
+        (Quantity(2, 2, 2, 2, 2, 2, 2) * Quantity()).toString()))
     assertEquals("mol^2·A^3·m^4·cd^5·g/s"
-        , Quantity(2, 2, 2, 2, 2, 2, 2).times(Quantity(0, 1, 2, 3, -1, -2, -3)).toString())
+        , (Quantity(2, 2, 2, 2, 2, 2, 2)* Quantity(0, 1, 2, 3, -1, -2, -3)).toString())
 
     // Test div()
     assertEquals("mol^2·A^2·m^2·cd^2·g^2·K^2·s^2"
-        , Quantity(2, 2, 2, 2, 2, 2, 2).div(Quantity()).toString())
+        , (Quantity(2, 2, 2, 2, 2, 2, 2) / Quantity()).toString())
     assertEquals("mol^2·A·g^3·K^4·s^5/cd"
-        , Quantity(2, 2, 2, 2, 2, 2, 2).div(Quantity(0, 1, 2, 3, -1, -2, -3)).toString())
+        , (Quantity(2, 2, 2, 2, 2, 2, 2)/ Quantity(0, 1, 2, 3, -1, -2, -3)).toString())
 
     println("Success!")
   }

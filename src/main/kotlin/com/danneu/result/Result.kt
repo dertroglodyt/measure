@@ -22,12 +22,12 @@ fun <V, V2, E> Result<V, E>.flatMap(transformValue: (V) -> Result<V2, E>): Resul
     is Result.Ok<V, E> ->
         transformValue(value)
     is Result.Err<V, E> ->
-        Result.Err<V2, E>(error)
+        Result.Err(error)
 }
 
 fun <V, E, E2> Result<V, E>.flatMapError(transformError: (E) -> Result<V, E2>): Result<V, E2> = when (this) {
     is Result.Ok<V, E> ->
-        Result.Ok<V, E2>(value)
+        Result.Ok(value)
     is Result.Err<V, E> ->
         transformError(error)
 }
@@ -42,16 +42,16 @@ sealed class Result <out V, out E> {
 
     fun <V2> map(transformValue: (V) -> V2): Result<V2, E> = when (this) {
         is Ok ->
-            Ok<V2, E>(transformValue(value))
+            Ok(transformValue(value))
         is Err ->
-            Err<V2, E>(error)
+            Err(error)
     }
 
     fun <E2> mapError(transformError: (E) -> E2): Result<V, E2> = when (this) {
         is Ok ->
-            Ok<V, E2>(value)
+            Ok(value)
         is Err ->
-            Err<V, E2>(transformError(error))
+            Err(transformError(error))
     }
 
     fun <V2> fold(transformValue: (V) -> V2, transformError: (E) -> V2): V2 = when (this) {

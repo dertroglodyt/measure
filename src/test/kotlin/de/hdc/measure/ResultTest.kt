@@ -1,7 +1,4 @@
-package de.hdc.kotlin.measure
-
-import org.junit.*
-import org.junit.Assert.*
+package de.hdc.measure
 
 /**
  * Created by DerTroglodyt on 2017-11-02 13:35.
