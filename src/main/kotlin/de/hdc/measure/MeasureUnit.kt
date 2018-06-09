@@ -21,7 +21,7 @@ open class MeasureUnit<out T : BaseUnit>(
   override fun equals(other: Any?): Boolean {
     if (other !is MeasureUnit<*>) {
       return false
-    } else if ((this.baseUnit is SI_COMBINED) || (other.baseUnit is SI_COMBINED)) {
+    } else if ((this.baseUnit is SI_COMBINED) && (other.baseUnit is SI_COMBINED)) {
       return ((this.prefix == other.prefix) && isEquivalentTo(other))
     } else if ((this.prefix == other.prefix) && (this.baseUnit == other.baseUnit)
             && (this.increment == other.increment) && (this.multiplier == other.multiplier)) {
@@ -102,7 +102,7 @@ object pc : MeasureUnit<SI_METER>(NONE, "Parsec", "pc", SI_METER, 3.085677581491
 object L : MeasureUnit<SI_VOLUME>(NONE, "Litre", "L", SI_VOLUME, 1e-3)
 object kg : MeasureUnit<SI_GRAM>(Prefix.KILO, "Gram", "g", SI_GRAM)
 object t : MeasureUnit<SI_GRAM>(NONE, "Ton", "t", SI_GRAM, 1e6)
-object `℃` : MeasureUnit<SI_KELVIN>(NONE, "Celsius", "°C", SI_KELVIN, 1.0, -273.15)
+object `°C` : MeasureUnit<SI_KELVIN>(NONE, "Celsius", "°C", SI_KELVIN, 1.0, -273.15)
 object m_s : MeasureUnit<SI_VELOCITY>(NONE, "Velocity", "m/s", SI_VELOCITY)
 object km_h : MeasureUnit<SI_VELOCITY>(NONE, "Velocity", "km/h", SI_VELOCITY, 3.6)
 object m_s2 : MeasureUnit<SI_ACCELERATION>(NONE, "Acceleration", "m/s²", SI_ACCELERATION)
@@ -110,6 +110,6 @@ object m_s2 : MeasureUnit<SI_ACCELERATION>(NONE, "Acceleration", "m/s²", SI_ACC
 val MEASURE_UNITS: MutableList<MeasureUnit<BaseUnit>> = mutableListOf(
         UNITLESS, mol, A, m, m2, m3, Cd, g, K
         , s, rad, sr, Hz, N, Pa, J, W
-        , min, h, d, AU, ly, pc, L, kg, t, `℃`
+        , min, h, d, AU, ly, pc, L, kg, t, `°C`
         , m_s, km_h, m_s2
 )

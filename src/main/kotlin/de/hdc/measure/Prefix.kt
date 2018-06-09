@@ -161,6 +161,7 @@ enum class Prefix(val longName: String, val symbol: String, val multiplier: Doub
       this == NONE -> KILO
       this == DECI -> NONE
       this == CENTI -> NONE
+      this == MILLI -> NONE
       else -> Prefix.values()[ordinal + 1]
     }
   }
@@ -168,6 +169,7 @@ enum class Prefix(val longName: String, val symbol: String, val multiplier: Doub
   fun down(): Prefix {
     return when {
       isLast() -> this
+      this == KILO -> NONE
       this == HECTO -> NONE
       this == DECA -> NONE
       this == NONE -> MILLI

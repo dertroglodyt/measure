@@ -14,10 +14,24 @@ operator fun <T : BaseUnit> Double.div(measure: Measure<T>): Measure<T> {
     throw ArithmeticException("Division by zero! ${toString()}/$measure")
   }
   if (this.testInvalid() || measure.value.testInvalid()) {
-    throw NumberFormatException("Division overflow! ${toString()} + $measure")
+    throw IllegalArgumentException("Illegal argument! ${toString()} + $measure")
   }
 
-  val r: Double = this / measure.toDouble()
+  val r: Double = this / measure.value
+
+  if (r.testInvalid()) {
+    throw ArithmeticException("Division overflow! ${toString()}/$measure")
+  }
+
+  return Measure(r, measure.unit)
+}
+
+operator fun <T : BaseUnit> Double.times(measure: Measure<T>): Measure<T> {
+  if (this.testInvalid() || measure.value.testInvalid()) {
+    throw IllegalArgumentException("Illegal argument! ${toString()} + $measure")
+  }
+
+  val r: Double = this * measure.value
 
   if (r.testInvalid()) {
     throw ArithmeticException("Division overflow! ${toString()}/$measure")
