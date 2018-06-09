@@ -3,6 +3,7 @@ package de.hdc.measure
 import de.hdc.measure.Prefix.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import java.lang.IllegalArgumentException
 
 internal class MeasureTest {
 
@@ -40,7 +41,7 @@ internal class MeasureTest {
 //    }
 
 //    println((149.0 G m).convertTo(AU))
-//    println((1 ˍ AU).convertTo(m).pretty())
+//    println((1 ˍ AU).convertTo(m).format())
 //    println(((((1.0 k g) * (1.0 ˍ m)) / (1.0 ˍ  s)) / (1.0 ˍ  s)).toDouble())
 //    println((((1.0 k g) * (1.0 ˍ m)) / (1.0 ˍ  s)) / (1.0 ˍ  s))
 //    println(((((1.0 k g) * (1.0 ˍ m)) / (1.0 ˍ  s)) / (1.0 ˍ  s)).convertTo(N))
@@ -98,4 +99,58 @@ internal class MeasureTest {
     assertEquals(1.0e9, Measure(1.0, GIGA, g).toDouble())
 
   }
+
+  @Test
+  fun format() {
+    //todo assertEquals("NaN", Double.NaN.format())
+
+    assertEquals("3,123 kg", (3.12345 k g).format(padding = 0))
+    assertEquals("   3,123 kg", (3.12345 k g).format())
+
+    assertEquals("  -0 kg", (-0.0 k g).format(0))
+    assertEquals("  -0 kg", (-0.0 k g).format(0, optimize = false))
+    assertEquals("   3 kg", (3.12345 k g).format(0))
+    assertEquals("   3,1 kg", (3.12345 k g).format(1))
+    assertEquals("   3,123 5 kg", (3.12345 k g).format(4))
+
+    assertEquals("  -3,123 kg", (-3.12345 k g).format())
+    assertEquals("  -3 kg", (-3.12345 k g).format(0))
+    assertEquals("  -3,1 kg", (-3.12345 k g).format(1))
+    assertEquals("  -3,123 5 kg", (-3.12345 k g).format(4))
+
+    assertEquals("   0,123 kg", (0.12345 k g).format(optimize = false))
+    assertEquals("   1,123 kg", (1.12345 k g).format(optimize = false))
+    assertEquals("  12,123 kg", (12.12345 k g).format(optimize = false))
+    assertEquals(" 123,123 kg", (123.12345 k g).format(optimize = false))
+    assertEquals("1 234,123 kg", (1234.12345 k g).format(optimize = false))
+    assertEquals("12 345,123 kg", (12345.12345 k g).format(optimize = false))
+    assertEquals("123 456,123 kg", (123456.12345 k g).format(optimize = false))
+    assertEquals("1 234 567,123 kg", (1234567.12345 k g).format(optimize = false))
+    assertEquals("12 345 678,123 kg", (12345678.12345 k g).format(optimize = false))
+    assertEquals("123 456 789,123 kg", (123456789.12345 k g).format(optimize = false))
+
+    assertEquals("  -0,123 kg", (-0.12345 k g).format(optimize = false))
+    assertEquals("  -1,123 kg", (-1.12345 k g).format(optimize = false))
+    assertEquals(" -12,123 kg", (-12.12345 k g).format(optimize = false))
+    assertEquals("-123,123 kg", (-123.12345 k g).format(optimize = false))
+    assertEquals("-1 234,123 kg", (-1234.12345 k g).format(optimize = false))
+    assertEquals("-12 345,123 kg", (-12345.12345 k g).format(optimize = false))
+    assertEquals("-123 456,123 kg", (-123456.12345 k g).format(optimize = false))
+    assertEquals("-1 234 567,123 kg", (-1234567.12345 k g).format(optimize = false))
+    assertEquals("-12 345 678,123 kg", (-12345678.12345 k g).format(optimize = false))
+    assertEquals("-123 456 789,123 kg", (-123456789.12345 k g).format(optimize = false))
+
+    assertEquals("   0,1 kg", (0.1 k g).format(1, optimize = false))
+    assertEquals("   0,12 kg", (0.12 k g).format(2, optimize = false))
+    assertEquals("   0,123 kg", (0.123 k g).format(3, optimize = false))
+    assertEquals("   0,123 4 kg", (0.1234 k g).format(4, optimize = false))
+    assertEquals("   0,123 45 kg", (0.12345 k g).format(5, optimize = false))
+    assertEquals("   0,123 456 kg", (0.123456 k g).format(6, optimize = false))
+    assertEquals("   0,123 456 7 kg", (0.1234567 k g).format(7, optimize = false))
+    assertEquals("   0,123 456 78 kg", (0.12345678 k g).format(8, optimize = false))
+    assertEquals("   0,123 456 789 kg", (0.123456789 k g).format(9, optimize = false))
+
+    assertThrows(IllegalArgumentException().javaClass, {(3.12345 k g).format(-1)})
+  }
 }
+

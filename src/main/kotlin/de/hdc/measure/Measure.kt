@@ -37,7 +37,7 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>): 
             , "NaN", "NaN", SI_COMBINED(Quantity())))
   }
 
-  fun getQuantity(): Quantity {
+  private fun getQuantity(): Quantity {
     return unit.baseUnit.quantity
   }
 
@@ -270,7 +270,14 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>): 
     return Measure(r, mu)
   }
 
-  fun pretty(decimals: Int = 3, padding: Int = 4, optimize: Boolean = true): String {
+  /**
+   * @param decimals Digits to show after decimal seperator
+   * @param padding Prepend with at most this number of Spaces if less digits on left side
+   *    of decimal seperator.
+   * @param optimize Wether to replace the prefix of the unit to shorten displayed number or
+   *     leave it as is.
+   */
+  fun format(decimals: Int = 3, padding: Int = 4, optimize: Boolean = true): String {
     if (decimals < 0) {
       throw IllegalArgumentException("Negative decimal places not allowed!")
     }
@@ -284,10 +291,16 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>): 
       v = result.component1()
       p = MeasureUnit(result.component2(), p.name, p.symbol, p.baseUnit, p.multiplier, p.increment)
     }
-    var s = v.format(decimals).replace('.', ',')
-    val comma = if (decimals > 0) 1 else 0
-    while (s.length < decimals + padding + comma) {
-      s = " $s"
+    var s = v.format(decimals)
+    var x = s.indexOf(',')
+    if (x < 0) {
+      x = s.length
+    }
+    x = padding - x
+    if (x > 0) {
+      for (i in 1..x) {
+        s = " $s"
+      }
     }
     return s + " " + p.toString().replace("Mg", "t")
   }
@@ -295,7 +308,7 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>): 
   private fun findOptimalPrefix(value: Double, prefix: Prefix): Pair<Double, Prefix> {
     var v = value
     var p = prefix
-    if (Math.abs(v) < 1.0) {
+    if ((Math.abs(v) < 1.0) && (v != 0.0)) {
       while ((Math.abs(v) < 1.0) && (!p.isLast())) {
         v *= (p.up().multiplier / p.multiplier)
         p = p.down()
@@ -311,7 +324,7 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>): 
 
   override fun toString(): String {
     return value.toString() + if (unit.toString() == "") "" else " " + unit.toString()
-//    return pretty(optimize = false, padding = 0)
+//    return format(optimize = false, padding = 0)
   }
 
   override fun compareTo(other: Measure<T>): Int {
