@@ -29,12 +29,18 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>): 
     val ONE = Measure(1.0, UNITLESS)
     val MIN_VALUE = Measure(Double.MIN_VALUE, UNITLESS)
     val MAX_VALUE = Measure(Double.MAX_VALUE, UNITLESS)
+//    val POSITIVE_INFINITY = Measure(Double.POSITIVE_INFINITY, MeasureUnit(Prefix.NONE
+//            , "POSITIVE_INFINITY", "POSITIVE_INFINITY", SI_COMBINED(Quantity())))
+//    val NEGATIVE_INFINITY = Measure(Double.NEGATIVE_INFINITY, MeasureUnit(Prefix.NONE
+//            , "NEGATIVE_INFINITY", "NEGATIVE_INFINITY", SI_COMBINED(Quantity())))
+//    val NaN = Measure(Double.NaN, MeasureUnit(Prefix.NONE
+//            , "NaN", "NaN", SI_COMBINED(Quantity())))
     val POSITIVE_INFINITY = Measure(Double.POSITIVE_INFINITY, MeasureUnit(Prefix.NONE
-            , "POSITIVE_INFINITY", "POSITIVE_INFINITY", SI_COMBINED(Quantity())))
+            , "", "", SI_COMBINED(Quantity())))
     val NEGATIVE_INFINITY = Measure(Double.NEGATIVE_INFINITY, MeasureUnit(Prefix.NONE
-            , "NEGATIVE_INFINITY", "NEGATIVE_INFINITY", SI_COMBINED(Quantity())))
+            , "", "", SI_COMBINED(Quantity())))
     val NaN = Measure(Double.NaN, MeasureUnit(Prefix.NONE
-            , "NaN", "NaN", SI_COMBINED(Quantity())))
+            , "", "", SI_COMBINED(Quantity())))
   }
 
   private fun getQuantity(): Quantity {
@@ -302,7 +308,7 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>): 
         s = " $s"
       }
     }
-    return s + " " + p.toString().replace("Mg", "t")
+    return s + if (p.toString().isEmpty()) "" else " " + p.toString().replace("Mg", "t")
   }
 
   private fun findOptimalPrefix(value: Double, prefix: Prefix): Pair<Double, Prefix> {

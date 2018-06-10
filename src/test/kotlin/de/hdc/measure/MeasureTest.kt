@@ -102,7 +102,7 @@ internal class MeasureTest {
 
   @Test
   fun format() {
-    //todo assertEquals("NaN", Double.NaN.format())
+    assertEquals(" NaN", Measure.NaN.format())
 
     assertEquals("3,123 kg", (3.12345 k g).format(padding = 0))
     assertEquals("   3,123 kg", (3.12345 k g).format())

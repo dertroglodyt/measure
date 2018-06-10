@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="10">
-      <module name="physical_main" target="1.8" />
-      <module name="physical_test" target="1.8" />
-    </bytecodeTargetLevel>
+    <option name="BUILD_PROCESS_HEAP_SIZE" value="1000" />
+    <bytecodeTargetLevel target="10" />
   </component>
 </project>
