@@ -19,15 +19,21 @@ open class MeasureUnit<out T : BaseUnit>(
   }
 
   override fun equals(other: Any?): Boolean {
-    if (other !is MeasureUnit<*>) {
-      return false
-    } else if ((this.baseUnit is SI_COMBINED) && (other.baseUnit is SI_COMBINED)) {
-      return ((this.prefix == other.prefix) && isEquivalentTo(other))
-    } else if ((this.prefix == other.prefix) && (this.baseUnit == other.baseUnit)
-            && (this.increment == other.increment) && (this.multiplier == other.multiplier)) {
-      return true
+    return when {
+      (other !is MeasureUnit<*>)
+          -> false
+      (this.baseUnit is SI_COMBINED || other.baseUnit is SI_COMBINED)
+              && (this.prefix == other.prefix)
+              && (this.increment == other.increment)
+              && (this.multiplier == other.multiplier)
+          -> isEquivalentTo(other)
+      (this.prefix == other.prefix)
+              && (this.baseUnit == other.baseUnit)
+              && (this.increment == other.increment)
+              && (this.multiplier == other.multiplier)
+          -> true
+      else -> false
     }
-    return false
   }
 
   override fun hashCode(): Int {
@@ -41,7 +47,11 @@ open class MeasureUnit<out T : BaseUnit>(
     return (this.baseUnit.quantity == other.baseUnit.quantity)
   }
 
-//  companion object MOLE : MeasureUnit<SI_MOLE>(NONE, "Mole", "SI_MOLE", SI_MOLE)
+  fun setPrefix(newPrefix: Prefix): MeasureUnit<T> {
+    return MeasureUnit(newPrefix, name, symbol, baseUnit, multiplier, increment)
+  }
+
+//  companion object mol: MeasureUnit<SI_MOLE>(NONE, "Mole", "SI_MOLE", SI_MOLE)
 
 }
 
@@ -71,7 +81,7 @@ open class MeasureUnit<out T : BaseUnit>(
 //}
 
 //Measure Units for convenience
-class COMBINED(q: Quantity) : MeasureUnit<SI_COMBINED>(NONE, "", "", SI_COMBINED(q))
+class COMBINED(q: Quantity) : MeasureUnit<SI_COMBINED>(NONE, "combined", q.toString(), SI_COMBINED(q))
 
 object UNITLESS : MeasureUnit<SI_UNITLESS>(NONE, "", "", SI_UNITLESS)
 
@@ -106,10 +116,11 @@ object `°C` : MeasureUnit<SI_KELVIN>(NONE, "Celsius", "°C", SI_KELVIN, 1.0, -2
 object m_s : MeasureUnit<SI_VELOCITY>(NONE, "Velocity", "m/s", SI_VELOCITY)
 object km_h : MeasureUnit<SI_VELOCITY>(NONE, "Velocity", "km/h", SI_VELOCITY, 3.6)
 object m_s2 : MeasureUnit<SI_ACCELERATION>(NONE, "Acceleration", "m/s²", SI_ACCELERATION)
+object `°`: MeasureUnit<SI_RADIAN>(NONE, "Degree", "°", SI_RADIAN, Math.PI / 180.0)
 
-val MEASURE_UNITS: MutableList<MeasureUnit<BaseUnit>> = mutableListOf(
-        UNITLESS, mol, A, m, m2, m3, Cd, g, K
-        , s, rad, sr, Hz, N, Pa, J, W
-        , min, h, d, AU, ly, pc, L, kg, t, `°C`
-        , m_s, km_h, m_s2
-)
+//val MEASURE_UNITS: MutableList<MeasureUnit<BaseUnit>> = mutableListOf(
+//        UNITLESS, mol, A, m, m2, m3, Cd, g, K
+//        , s, rad, sr, Hz, N, Pa, J, W
+//        , min, h, d, AU, ly, pc, L, kg, t, `°C`
+//        , m_s, km_h, m_s2
+//)

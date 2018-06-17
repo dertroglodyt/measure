@@ -7,4 +7,10 @@
   <component name="Kotlin2JvmCompilerArguments">
     <option name="jvmTarget" value="1.8" />
   </component>
+  <component name="KotlinCommonCompilerArguments">
+    <option name="coroutinesState" value="enable" />
+  </component>
+  <component name="KotlinCompilerSettings">
+    <option name="additionalArguments" value="-version -Xprogressive" />
+  </component>
 </project>

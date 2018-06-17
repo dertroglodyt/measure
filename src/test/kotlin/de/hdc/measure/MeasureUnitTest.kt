@@ -2,6 +2,7 @@ package de.hdc.measure
 
 import de.hdc.measure.Prefix.KILO
 import de.hdc.measure.Prefix.NONE
+import io.kotlintest.specs.StringSpec
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 

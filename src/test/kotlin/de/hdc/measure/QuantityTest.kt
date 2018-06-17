@@ -1,9 +1,10 @@
 package de.hdc.measure
 
+import io.kotlintest.specs.AnnotationSpec
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-class QuantityTest {
+class QuantityTest: AnnotationSpec() {
 
   @Test
   fun main() {

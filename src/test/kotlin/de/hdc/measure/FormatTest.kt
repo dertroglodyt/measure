@@ -1,10 +1,11 @@
 package de.hdc.measure
 
 import de.hdc.measure.Prefix.*
+import io.kotlintest.specs.AnnotationSpec
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-internal class FormatTest {
+internal class FormatTest: AnnotationSpec() {
 
   @Test
   fun main() {

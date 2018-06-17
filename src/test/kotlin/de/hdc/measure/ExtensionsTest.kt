@@ -1,11 +1,12 @@
 package de.hdc.measure
 
-import org.junit.jupiter.api.Test
-
+import io.kotlintest.specs.AnnotationSpec
+import io.kotlintest.specs.Test
 import org.junit.jupiter.api.Assertions.*
+
 import java.lang.IllegalArgumentException
 
-internal class ExtensionsTest {
+internal class ExtensionsTest: AnnotationSpec() {
 
   @Test
   fun format() {

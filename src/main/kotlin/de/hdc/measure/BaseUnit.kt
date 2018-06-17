@@ -1,6 +1,10 @@
 package de.hdc.measure
 
-sealed class BaseUnit(val quantity: Quantity)
+sealed class BaseUnit(val quantity: Quantity) {
+  override fun toString(): String {
+    return "BaseUnit(quantity=$quantity)"
+  }
+}
 
 // SI Units
 class SI_COMBINED(q: Quantity) : BaseUnit(q)

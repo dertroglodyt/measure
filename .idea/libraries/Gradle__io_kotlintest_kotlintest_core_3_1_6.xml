@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: io.kotlintest:kotlintest-core:3.1.6">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.kotlintest/kotlintest-core/3.1.6/a2436b693219b9148a12ad2d3c9ee548a9878845/kotlintest-core-3.1.6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.kotlintest/kotlintest-core/3.1.6/f47c7aed15a477a84e3d1839092365ee8cbf038c/kotlintest-core-3.1.6-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

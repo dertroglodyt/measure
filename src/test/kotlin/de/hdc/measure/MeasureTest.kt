@@ -1,11 +1,12 @@
 package de.hdc.measure
 
 import de.hdc.measure.Prefix.*
+import io.kotlintest.specs.AnnotationSpec
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.lang.IllegalArgumentException
 
-internal class MeasureTest {
+internal class MeasureTest: AnnotationSpec() {
 
 //  val reader = autoClose(StringReader("xyz"))
 

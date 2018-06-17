@@ -35,12 +35,9 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>): 
 //            , "NEGATIVE_INFINITY", "NEGATIVE_INFINITY", SI_COMBINED(Quantity())))
 //    val NaN = Measure(Double.NaN, MeasureUnit(Prefix.NONE
 //            , "NaN", "NaN", SI_COMBINED(Quantity())))
-    val POSITIVE_INFINITY = Measure(Double.POSITIVE_INFINITY, MeasureUnit(Prefix.NONE
-            , "", "", SI_COMBINED(Quantity())))
-    val NEGATIVE_INFINITY = Measure(Double.NEGATIVE_INFINITY, MeasureUnit(Prefix.NONE
-            , "", "", SI_COMBINED(Quantity())))
-    val NaN = Measure(Double.NaN, MeasureUnit(Prefix.NONE
-            , "", "", SI_COMBINED(Quantity())))
+    val POSITIVE_INFINITY = Measure(Double.POSITIVE_INFINITY, COMBINED(Quantity()))
+    val NEGATIVE_INFINITY = Measure(Double.NEGATIVE_INFINITY, COMBINED(Quantity()))
+    val NaN = Measure(Double.NaN, COMBINED(Quantity()))
   }
 
   private fun getQuantity(): Quantity {
@@ -80,10 +77,13 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>): 
     if (other !is Measure<*>) {
       return false
     }
-      if (!unit.isEquivalentTo(other.unit)) {
-        return false
-      }
-    return (toDouble().compareTo(other.toDouble()) == 0)
+    if (!unit.isEquivalentTo(other.unit)) {
+      return false
+    }
+    if (unit == other.unit) {
+      return toDouble() == other.toDouble()
+    }
+    return toDouble() == other.convertTo(this.unit).toDouble()
   }
 
   override fun hashCode(): Int {
@@ -294,8 +294,8 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>): 
     var p = unit
     if (optimize) {
       val result = findOptimalPrefix(value, unit.prefix)
-      v = result.component1()
-      p = MeasureUnit(result.component2(), p.name, p.symbol, p.baseUnit, p.multiplier, p.increment)
+      v = result.first
+      p = p.setPrefix(result.second)
     }
     var s = v.format(decimals)
     var x = s.indexOf(',')
@@ -329,7 +329,7 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>): 
   }
 
   override fun toString(): String {
-    return value.toString() + if (unit.toString() == "") "" else " " + unit.toString()
+    return value.toString() + if (unit.toString().isEmpty()) "" else " " + unit.toString()
 //    return format(optimize = false, padding = 0)
   }
 
