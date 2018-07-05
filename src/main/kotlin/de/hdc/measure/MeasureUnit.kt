@@ -2,6 +2,8 @@ package de.hdc.measure
 
 import de.hdc.measure.Prefix.NONE
 
+typealias MU<T> = MeasureUnit<T>
+
 open class MeasureUnit<out T : BaseUnit>(
         val prefix: Prefix,
         val name: String,
@@ -9,6 +11,9 @@ open class MeasureUnit<out T : BaseUnit>(
         val baseUnit: T,
         val multiplier: Double = 1.0,
         val increment: Double = 0.0) {
+
+  constructor(prefix: Prefix, unit: MeasureUnit<T>) :
+          this(prefix, unit.name, unit.symbol, unit.baseUnit, unit.multiplier, unit.increment)
 
   override fun toString(): String {
     return if (this is COMBINED) {
@@ -110,7 +115,7 @@ object AU : MeasureUnit<SI_METER>(NONE, "Astronomical Unit", "AU", SI_METER, 149
 object ly : MeasureUnit<SI_METER>(NONE, "Light Year", "ly", SI_METER, 9460730472580800.0)
 object pc : MeasureUnit<SI_METER>(NONE, "Parsec", "pc", SI_METER, 3.08567758149137e16)
 object L : MeasureUnit<SI_VOLUME>(NONE, "Litre", "L", SI_VOLUME, 1e-3)
-object kg : MeasureUnit<SI_GRAM>(Prefix.KILO, "Gram", "g", SI_GRAM)
+object kg : MeasureUnit<SI_GRAM>(Prefix.k, "Gram", "g", SI_GRAM)
 object t : MeasureUnit<SI_GRAM>(NONE, "Ton", "t", SI_GRAM, 1e6)
 object `°C` : MeasureUnit<SI_KELVIN>(NONE, "Celsius", "°C", SI_KELVIN, 1.0, -273.15)
 object m_s : MeasureUnit<SI_VELOCITY>(NONE, "Velocity", "m/s", SI_VELOCITY)

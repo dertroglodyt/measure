@@ -123,45 +123,45 @@ enum class BinaryPrefix(val longName: String, val symbol: String, val multiplier
 }
 
 enum class Prefix(val longName: String, val symbol: String, val multiplier: Double) {
-  YOCTO("yocto", "y", 1e-24),
-  ZEPTO("zepto", "z", 1e-21),
-  ATTO("atto", "a", 1e-18),
-  FEMTO("femto", "f", 1e-15),
-  PICO("pico", "p", 1e-12),
-  NANO("nano", "n", 1e-9),
-  MICRO("micro", "µ", 1e-6),
-  MILLI("milli", "m", 1e-3),
-  CENTI("centi", "c", 1e-2),
-  DECI("deci", "d", 1e-1),
+  y("yocto", "y", 1e-24),
+  z("zepto", "z", 1e-21),
+  a("atto", "a", 1e-18),
+  f("femto", "f", 1e-15),
+  p("pico", "p", 1e-12),
+  n("nano", "n", 1e-9),
+  µ("micro", "µ", 1e-6),
+  m("milli", "m", 1e-3),
+  c("centi", "c", 1e-2),
+  d("deci", "d", 1e-1),
   NONE("", "", 1e0),
-  DECA("deca", "da", 1e1),
-  HECTO("hecto", "h", 1e2),
-  KILO("kilo", "k", 1e3),
-  MEGA("mega", "M", 1e6),
-  GIGA("giga", "G", 1e9),
-  TERA("tera", "T", 1e12),
-  PETA("peta", "P", 1e15),
-  EXA("exa", "X", 1e18),
-  ZETA("zeta", "Z", 1e21),
-  YOTA("yota", "Y", 1e24);
+  da("deca", "da", 1e1),
+  h("hecto", "h", 1e2),
+  k("kilo", "k", 1e3),
+  M("mega", "M", 1e6),
+  G("giga", "G", 1e9),
+  T("tera", "T", 1e12),
+  P("peta", "P", 1e15),
+  X("exa", "X", 1e18),
+  Z("zeta", "Z", 1e21),
+  Y("yota", "Y", 1e24);
 
   override fun toString(): String {
     return symbol
   }
 
   fun isLast(): Boolean {
-    return ((this == YOTA) || (this == YOCTO))
+    return ((this == Y) || (this == y))
   }
 
   fun up(): Prefix {
     return when {
       isLast() -> this
-      this == HECTO -> KILO
-      this == DECA -> KILO
-      this == NONE -> KILO
-      this == DECI -> NONE
-      this == CENTI -> NONE
-      this == MILLI -> NONE
+      this == h -> k
+      this == da -> k
+      this == NONE -> k
+      this == d -> NONE
+      this == c -> NONE
+      this == m -> NONE
       else -> Prefix.values()[ordinal + 1]
     }
   }
@@ -169,82 +169,82 @@ enum class Prefix(val longName: String, val symbol: String, val multiplier: Doub
   fun down(): Prefix {
     return when {
       isLast() -> this
-      this == KILO -> NONE
-      this == HECTO -> NONE
-      this == DECA -> NONE
-      this == NONE -> MILLI
-      this == DECI -> MILLI
-      this == CENTI -> MILLI
+      this == k -> NONE
+      this == h -> NONE
+      this == da -> NONE
+      this == NONE -> m
+      this == d -> m
+      this == c -> m
       else -> Prefix.values()[ordinal - 1]
     }
   }
 }
 
 infix fun <T: BaseUnit> Number.Y(measureUnit: MeasureUnit<T>): Measure<T> {
-  return Measure(this.toDouble(),  Prefix.YOTA, measureUnit)
+  return Measure(this.toDouble(),  Prefix.Y, measureUnit)
 }
 infix fun <T: BaseUnit> Number.Z(measureUnit: MeasureUnit<T>): Measure<T> {
-  return Measure(this.toDouble(),  Prefix.ZETA, measureUnit)
+  return Measure(this.toDouble(),  Prefix.Z, measureUnit)
 }
 infix fun <T: BaseUnit> Number.X(measureUnit: MeasureUnit<T>): Measure<T> {
-  return Measure(this.toDouble(),  Prefix.EXA, measureUnit)
+  return Measure(this.toDouble(),  Prefix.X, measureUnit)
 }
 infix fun <T: BaseUnit> Number.P(measureUnit: MeasureUnit<T>): Measure<T> {
-  return Measure(this.toDouble(),  Prefix.PETA, measureUnit)
+  return Measure(this.toDouble(),  Prefix.P, measureUnit)
 }
 infix fun <T: BaseUnit> Number.T(measureUnit: MeasureUnit<T>): Measure<T> {
-  return Measure(this.toDouble(),  Prefix.TERA, measureUnit)
+  return Measure(this.toDouble(),  Prefix.T, measureUnit)
 }
 infix fun <T: BaseUnit> Number.G(measureUnit: MeasureUnit<T>): Measure<T> {
-  return Measure(this.toDouble(),  Prefix.GIGA, measureUnit)
+  return Measure(this.toDouble(),  Prefix.G, measureUnit)
 }
 infix fun <T: BaseUnit> Number.M(measureUnit: MeasureUnit<T>): Measure<T> {
-  return Measure(this.toDouble(),  Prefix.MEGA, measureUnit)
+  return Measure(this.toDouble(),  Prefix.M, measureUnit)
 }
 infix fun <T: BaseUnit> Number.k(measureUnit: MeasureUnit<T>): Measure<T> {
-  return Measure(this.toDouble(),  Prefix.KILO, measureUnit)
+  return Measure(this.toDouble(),  Prefix.k, measureUnit)
 }
 
 infix fun <T: BaseUnit> Number.h(measureUnit: MeasureUnit<T>): Measure<T> {
-  return Measure(this.toDouble(),  Prefix.HECTO, measureUnit)
+  return Measure(this.toDouble(),  Prefix.h, measureUnit)
 }
 infix fun <T: BaseUnit> Number.da(measureUnit: MeasureUnit<T>): Measure<T> {
-  return Measure(this.toDouble(),  Prefix.DECA, measureUnit)
+  return Measure(this.toDouble(),  Prefix.da, measureUnit)
 }
 
 infix fun <T: BaseUnit> Number.ˍ(measureUnit: MeasureUnit<T>): Measure<T> {
   return Measure(this.toDouble(),  Prefix.NONE, measureUnit)
 }
 infix fun <T: BaseUnit> Number.d(measureUnit: MeasureUnit<T>): Measure<T> {
-  return Measure(this.toDouble(),  Prefix.DECI, measureUnit)
+  return Measure(this.toDouble(),  Prefix.d, measureUnit)
 }
 
 infix fun <T: BaseUnit> Number.c(measureUnit: MeasureUnit<T>): Measure<T> {
-  return Measure(this.toDouble(),  Prefix.CENTI, measureUnit)
+  return Measure(this.toDouble(),  Prefix.c, measureUnit)
 }
 
 infix fun <T: BaseUnit> Number.m(measureUnit: MeasureUnit<T>): Measure<T> {
-  return Measure(this.toDouble(),  Prefix.MILLI, measureUnit)
+  return Measure(this.toDouble(),  Prefix.m, measureUnit)
 }
 infix fun <T: BaseUnit> Number.µ(measureUnit: MeasureUnit<T>): Measure<T> {
-  return Measure(this.toDouble(),  Prefix.MICRO, measureUnit)
+  return Measure(this.toDouble(),  Prefix.µ, measureUnit)
 }
 infix fun <T: BaseUnit> Number.n(measureUnit: MeasureUnit<T>): Measure<T> {
-  return Measure(this.toDouble(),  Prefix.NANO, measureUnit)
+  return Measure(this.toDouble(),  Prefix.n, measureUnit)
 }
 infix fun <T: BaseUnit> Number.p(measureUnit: MeasureUnit<T>): Measure<T> {
-  return Measure(this.toDouble(),  Prefix.PICO, measureUnit)
+  return Measure(this.toDouble(),  Prefix.p, measureUnit)
 }
 infix fun <T: BaseUnit> Number.f(measureUnit: MeasureUnit<T>): Measure<T> {
-  return Measure(this.toDouble(),  Prefix.FEMTO, measureUnit)
+  return Measure(this.toDouble(),  Prefix.f, measureUnit)
 }
 infix fun <T: BaseUnit> Number.a(measureUnit: MeasureUnit<T>): Measure<T> {
-  return Measure(this.toDouble(),  Prefix.ATTO, measureUnit)
+  return Measure(this.toDouble(),  Prefix.a, measureUnit)
 }
 infix fun <T: BaseUnit> Number.z(measureUnit: MeasureUnit<T>): Measure<T> {
-  return Measure(this.toDouble(),  Prefix.ZEPTO, measureUnit)
+  return Measure(this.toDouble(),  Prefix.z, measureUnit)
 }
 infix fun <T: BaseUnit> Number.y(measureUnit: MeasureUnit<T>): Measure<T> {
-  return Measure(this.toDouble(),  Prefix.YOCTO, measureUnit)
+  return Measure(this.toDouble(),  Prefix.y, measureUnit)
 }
 

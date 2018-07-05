@@ -3,6 +3,13 @@ package de.hdc.measure
 import java.util.*
 import kotlin.math.roundToInt
 
+/**
+ * Ignores last to decimal digits when comparing for equal.
+ */
+infix fun Double.aproximates(x: Double): Boolean  {
+  return (this == x) || ((x < this + 1e-14) && (x > this - 1e-14))
+}
+
 fun Double.format(digits: Int = 3): String {
   val invalid = this.testInvalid()
   return when {
@@ -42,6 +49,7 @@ fun Double.format(digits: Int = 3): String {
 }
 
 fun Double.testInvalid(): Boolean {
+  // "euqals" not replaceable by "=="
   return ((this.equals(Double.POSITIVE_INFINITY))
           || (this.equals(Double.NEGATIVE_INFINITY))
           || (this.equals(Double.MAX_VALUE))

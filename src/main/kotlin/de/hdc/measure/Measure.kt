@@ -19,10 +19,11 @@ fun measureFrom(value: String): Result<*, *> {
 /*
  * Combines a value with a physical unit.
  */
-data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>): Number(), Comparable<Measure<T>> {
+data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>)
+  : Number(), Comparable<Measure<T>> {
 
   constructor (value: Double, prefix: Prefix, unit: MeasureUnit<T>)
-    : this(value, MeasureUnit(prefix, unit.name, unit.symbol, unit.baseUnit, unit.multiplier, unit.increment))
+          : this(value, MeasureUnit(prefix, unit))
 
   companion object {
     val ZERO = Measure(0.0, UNITLESS)
@@ -81,13 +82,26 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>): 
       return false
     }
     if (unit == other.unit) {
-      return toDouble() == other.toDouble()
+      return value == other.value
     }
     return toDouble() == other.convertTo(this.unit).toDouble()
   }
 
   override fun hashCode(): Int {
     return super.hashCode()
+  }
+
+  infix fun aproximates(other: Any?): Boolean {
+    if (other !is Measure<*>) {
+      return false
+    }
+    if (!unit.isEquivalentTo(other.unit)) {
+      return false
+    }
+    if (unit == other.unit) {
+      return value aproximates other.value
+    }
+    return toDouble() aproximates other.convertTo(this.unit).toDouble()
   }
 
   fun <U : BaseUnit> convertTo(measureUnit: MeasureUnit<U>): Measure<U> {
