@@ -61,6 +61,8 @@ sealed class Result <out V, out E> {
             transformError(error)
     }
 
+    fun isOk() = this is Ok
+
     class Ok <out V, out E> internal constructor (val value: V): Result<V, E>() {
         override fun toString() = "Result.Ok($value)"
         override fun hashCode() = value?.hashCode() ?: 0

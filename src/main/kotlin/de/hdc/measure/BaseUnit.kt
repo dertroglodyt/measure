@@ -18,6 +18,7 @@ object SI_GRAM : BaseUnit(Quantity(g = 1))
 object SI_KELVIN : BaseUnit(Quantity(K = 1))
 object SI_SECOND : BaseUnit(Quantity(s = 1))
 // Derived SI Units
+object SI_PCS : BaseUnit(Quantity())
 object SI_AREA : BaseUnit(Quantity(m = 2))
 object SI_VOLUME : BaseUnit(Quantity(m = 3))
 object SI_RADIAN : BaseUnit(Quantity())

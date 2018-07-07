@@ -104,6 +104,7 @@ object sr : MeasureUnit<SI_STERADIAN>(NONE, "Steradian", "sr", SI_STERADIAN)
 object Hz : MeasureUnit<SI_HERTZ>(NONE, "Hertz", "Hz", SI_HERTZ)
 object N : MeasureUnit<SI_NEWTON>(NONE, "Newton", "N", SI_NEWTON, 1e3)
 
+object pcs : MeasureUnit<SI_PCS>(NONE, "pieces", "pcs", SI_PCS)
 object Pa : MeasureUnit<SI_PASCAL>(NONE, "Pascal", "PA", SI_PASCAL)
 object J : MeasureUnit<SI_JOULE>(NONE, "Joule", "NumberName", SI_JOULE)
 object W : MeasureUnit<SI_WATT>(NONE, "Watt", "W", SI_WATT)
