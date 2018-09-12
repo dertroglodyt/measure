@@ -1,7 +1,10 @@
 buildscript {
-    ext.kotlin_version = '1.2.50'
+    ext.kotlin_version = '1.2.60'
 
     repositories {
+        maven {
+            url "http://dl.bintray.com/kotlin/kotlin-eap"
+        }
         mavenCentral()
     }
     dependencies {
@@ -10,14 +13,24 @@ buildscript {
     }
 }
 
+plugins {
+    id 'maven-publish'
+}
+
 group 'de.hdc.measure'
+//artifactId 'measure'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'kotlin'
 apply plugin: 'org.junit.platform.gradle.plugin'
 
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        maven {
+            url "http://dl.bintray.com/kotlin/kotlin-eap"
+        }
+        mavenCentral()
+    }
 }
 
 test {
@@ -25,13 +38,21 @@ test {
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+//    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'org.junit.jupiter:junit-jupiter-api:5.2.0'
     compile 'io.kotlintest:kotlintest-runner-junit5:3.1.6'
 }
 
-kotlin {
-    experimental {
-        coroutines "enable"
+kotlin { experimental { coroutines 'enable' } }
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'de.hdc.measure'
+            artifactId = 'measure'
+            version = '1.0'
+
+            from components.java
+        }
     }
 }
