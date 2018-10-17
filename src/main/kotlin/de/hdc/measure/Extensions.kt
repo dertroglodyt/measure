@@ -10,6 +10,10 @@ infix fun Double.aproximates(x: Double): Boolean  {
   return (this == x) || ((x < this + 1e-14) && (x > this - 1e-14))
 }
 
+fun Double.aproximates(x: Double, maxDiff: Double): Boolean  {
+  return (this == x) || ((x < this + maxDiff) && (x > this - maxDiff))
+}
+
 fun Double.format(digits: Int = 3): String {
   val invalid = this.testInvalid()
   return when {

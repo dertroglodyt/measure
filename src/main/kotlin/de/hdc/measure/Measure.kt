@@ -104,6 +104,16 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>)
     return toDouble() aproximates other.convertTo(this.unit).toDouble()
   }
 
+  fun aproximates(other: Measure<T>, maxDiff: Measure<T>): Boolean {
+    if (!unit.isEquivalentTo(other.unit)) {
+      return false
+    }
+    if (unit == other.unit) {
+      return value.aproximates(other.value, maxDiff.convertTo(other.unit).value)
+    }
+    return toDouble().aproximates(other.convertTo(this.unit).toDouble(), maxDiff.convertTo(this.unit).value)
+  }
+
   fun <U : BaseUnit> convertTo(measureUnit: MeasureUnit<U>): Measure<U> {
     if (measureUnit == unit) {
       return Measure(value, measureUnit)

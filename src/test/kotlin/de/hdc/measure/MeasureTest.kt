@@ -76,27 +76,27 @@ internal class MeasureTest: FreeSpec() {
       // test toString()
       assertEquals("1.23", Measure(1.23, UNITLESS).toString())
       assertEquals("-1.23", Measure(-1.23, UNITLESS).toString())
-      assertEquals("1.23 kg", Measure(1.23, kg).toString())
-      assertEquals("-1.23 kg", Measure(-1.23, kg).toString())
+      assertEquals("1.23 kg", (1.23 k g).toString())
+      assertEquals("-1.23 kg", (-1.23 k g).toString())
       assertEquals("1.23 m/s²", Measure(1.23, m_s2).toString())
 
 
       // test compareTo()
       // must not compile
       //assertEquals(1, Measure(1.0, kg).compareTo(Measure(1.0, SECOND)))
-      assertEquals(1, Measure(1.0, kg).compareTo(Measure(1.0, g)))
+      assertEquals(1, (1.0 k g).compareTo(Measure(1.0, g)))
       assertEquals(-1, Measure(1.0, P, g).compareTo(Measure(1.0, Y, g)))
-      assertEquals(0, Measure(1.0, kg).compareTo(Measure(1.0, kg)))
-      assertEquals(-1, Measure(1.0, kg).compareTo(Measure(2.0, kg)))
+      assertEquals(0, (1.0 k g).compareTo((1.0 k g)))
+      assertEquals(-1, (1.0 k g).compareTo((2.0 k g)))
 
 
       // test toDouble()
-      assertEquals(1000.0, Measure(1.0, kg).toDouble())
-      assertEquals(1000000.0, Measure(1.0, t).toDouble())
-      assertEquals(1.0, Measure(1.0, g).toDouble())
+      assertEquals(1.0, (1.0 k g).toDouble())
+      assertEquals(1000.0, Measure(1.0, t).toDouble())
+      assertEquals(0.001, Measure(1.0, g).toDouble())
       assertEquals(0.0, Measure(0.0, g).toDouble())
-      assertEquals(-1.0, Measure(-1.0, g).toDouble())
-      assertEquals(1.0e9, Measure(1.0, G, g).toDouble())
+      assertEquals(-0.001, Measure(-1.0, g).toDouble())
+      assertEquals(1.0e6, Measure(1.0, G, g).toDouble())
 
     }
 
@@ -150,6 +150,15 @@ internal class MeasureTest: FreeSpec() {
       assertEquals("   0,123 456 789 kg", (0.123456789 k g).format(9, optimize = false))
 
       assertThrows(IllegalArgumentException().javaClass) { (3.12345 k g).format(-1) }
+    }
+
+    "calculations" {
+      ((10.0 k g) / (5.0 ˍ g) * (3 ˍ s)) shouldBe(6000.0 ˍ s)
+      ((10.0 k g) / (5.0 ˍ g) * (3 ˍ s)).unit shouldBe s
+      ((10.0 k g) / (5.0 ˍ g) * (3 ˍ s)).convertTo(min) shouldBe(100.0 ˍ min)
+      ((10.0 k m) * (10.0 k m)) shouldBe(1.0e8 ˍ m2)
+      ((10.0 k g) * (10.0 k g)).value shouldBe(100.0)
+      ((10.0 k g) * (10.0 ˍ g)).value shouldBe(0.1)
     }
   }
 }

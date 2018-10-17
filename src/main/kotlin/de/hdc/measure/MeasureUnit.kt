@@ -96,13 +96,13 @@ object m : MeasureUnit<SI_METER>(NONE, "Meter", "m", SI_METER)
 object m2 : MeasureUnit<SI_AREA>(NONE, "Square Meter", "m²", SI_AREA)
 object m3 : MeasureUnit<SI_VOLUME>(NONE, "Cubic Meter", "m³", SI_VOLUME)
 object Cd : MeasureUnit<SI_CANDELA>(NONE, "Candela", "cd", SI_CANDELA)
-object g : MeasureUnit<SI_GRAM>(NONE, "Gram", "g", SI_GRAM)
+object g : MeasureUnit<SI_KILOGRAM>(NONE, "Gram", "g", SI_KILOGRAM, 1e-3)
 object K : MeasureUnit<SI_KELVIN>(NONE, "Kelvin", "K", SI_KELVIN)
 object s : MeasureUnit<SI_SECOND>(NONE, "Second", "s", SI_SECOND)
 object rad : MeasureUnit<SI_RADIAN>(NONE, "Radian", "rad", SI_RADIAN)
 object sr : MeasureUnit<SI_STERADIAN>(NONE, "Steradian", "sr", SI_STERADIAN)
 object Hz : MeasureUnit<SI_HERTZ>(NONE, "Hertz", "Hz", SI_HERTZ)
-object N : MeasureUnit<SI_NEWTON>(NONE, "Newton", "N", SI_NEWTON, 1e3)
+object N : MeasureUnit<SI_NEWTON>(NONE, "Newton", "N", SI_NEWTON)
 
 object pcs : MeasureUnit<SI_PCS>(NONE, "pieces", "pcs", SI_PCS)
 object Pa : MeasureUnit<SI_PASCAL>(NONE, "Pascal", "PA", SI_PASCAL)
@@ -116,8 +116,8 @@ object AU : MeasureUnit<SI_METER>(NONE, "Astronomical Unit", "AU", SI_METER, 149
 object ly : MeasureUnit<SI_METER>(NONE, "Light Year", "ly", SI_METER, 9460730472580800.0)
 object pc : MeasureUnit<SI_METER>(NONE, "Parsec", "pc", SI_METER, 3.08567758149137e16)
 object L : MeasureUnit<SI_VOLUME>(NONE, "Litre", "L", SI_VOLUME, 1e-3)
-object kg : MeasureUnit<SI_GRAM>(Prefix.k, "Gram", "g", SI_GRAM)
-object t : MeasureUnit<SI_GRAM>(NONE, "Ton", "t", SI_GRAM, 1e6)
+//object kg : MeasureUnit<SI_KILOGRAM>(Prefix.k, "Kilogram", "kg", SI_KILOGRAM)
+object t : MeasureUnit<SI_KILOGRAM>(NONE, "Ton", "t", SI_KILOGRAM, 1e3)
 object `°C` : MeasureUnit<SI_KELVIN>(NONE, "Celsius", "°C", SI_KELVIN, 1.0, -273.15)
 object m_s : MeasureUnit<SI_VELOCITY>(NONE, "Velocity", "m/s", SI_VELOCITY)
 object km_h : MeasureUnit<SI_VELOCITY>(NONE, "Velocity", "km/h", SI_VELOCITY, 3.6)
@@ -125,7 +125,7 @@ object m_s2 : MeasureUnit<SI_ACCELERATION>(NONE, "Acceleration", "m/s²", SI_ACC
 object `°`: MeasureUnit<SI_RADIAN>(NONE, "Degree", "°", SI_RADIAN, Math.PI / 180.0)
 
 //val MEASURE_UNITS: MutableList<MeasureUnit<BaseUnit>> = mutableListOf(
-//        UNITLESS, mol, A, m, m2, m3, Cd, g, K
+//        UNITLESS, mol, A, m, m2, m3, Cd, kg, K
 //        , s, rad, sr, Hz, N, Pa, J, W
 //        , min, h, d, AU, ly, pc, L, kg, t, `°C`
 //        , m_s, km_h, m_s2

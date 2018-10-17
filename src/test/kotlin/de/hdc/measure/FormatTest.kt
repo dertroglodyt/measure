@@ -32,9 +32,9 @@ internal class FormatTest: FreeSpec() {
       assertEquals("  23,000 g", Measure(23.0, g).format(3, 4, false))
       // No optimization, no digits
       assertEquals("2 300 kg", (2300.0 k g).format(0, 5, false))
-      assertEquals("2 300 kg", Measure(2300.0, kg).format(0, 5, false))
+      assertEquals("2 300 kg", (2300.0 k g).format(0, 5, false))
       // optimization, no digits
-      assertEquals("  230 t", Measure(230000.0, kg).format(0, 5))
+      assertEquals("  230 t", (230000.0 k g).format(0, 5))
     }
   }
 }

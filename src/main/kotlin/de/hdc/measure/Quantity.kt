@@ -5,13 +5,13 @@ package de.hdc.measure
 //}
 
 data class Quantity(
-        val mol: Int = 0,
-        val A: Int = 0,
-        val m: Int = 0,
-        val Cd: Int = 0,
-        val g: Int = 0,
-        val K: Int = 0,
-        val s: Int = 0) {
+    val mol: Int = 0,
+    val A: Int = 0,
+    val m: Int = 0,
+    val Cd: Int = 0,
+    val kg: Int = 0,
+    val K: Int = 0,
+    val s: Int = 0) {
 
   override fun toString(): String {
     var st = ""
@@ -23,8 +23,8 @@ data class Quantity(
     if (m > 1) st += "m^$m "
     if (Cd == 1) st += "cd "
     if (Cd > 1) st += "cd^$Cd "
-    if (g == 1) st += "g "
-    if (g > 1) st += "g^$g "
+    if (kg == 1) st += "kg "
+    if (kg > 1) st += "kg^$kg "
     if (K == 1) st += "K "
     if (K > 1) st += "K^$K "
     if (s == 1) st += "s "
@@ -40,8 +40,8 @@ data class Quantity(
     if (m < -1) s2 += "m^${Math.abs(m)} "
     if (Cd == -1) s2 += "cd "
     if (Cd < -1) s2 += "cd^${Math.abs(Cd)} "
-    if (g == -1) s2 += "g "
-    if (g < -1) s2 += "g^${Math.abs(g)} "
+    if (kg == -1) s2 += "kg "
+    if (kg < -1) s2 += "kg^${Math.abs(kg)} "
     if (K == -1) s2 += "K "
     if (K < -1) s2 += "K^${Math.abs(K)} "
     if (s == -1) s2 += "s "
@@ -66,7 +66,7 @@ data class Quantity(
         && (A == other.A)
         && (m == other.m)
         && (Cd == other.Cd)
-        && (g == other.g)
+        && (kg == other.kg)
         && (K == other.K)
         && (s == other.s)
         )
@@ -81,7 +81,7 @@ data class Quantity(
             , A + q.A
             , m + q.m
             , Cd + q.Cd
-            , g + q.g
+            , kg + q.kg
             , K + q.K
             , s + q.s)
   }
@@ -91,7 +91,7 @@ data class Quantity(
             , A - q.A
             , m - q.m
             , Cd - q.Cd
-            , g - q.g
+            , kg - q.kg
             , K - q.K
             , s - q.s)
   }
