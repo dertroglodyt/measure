@@ -1,17 +1,32 @@
+buildscript {
+    ext.kotlin_version = '1.3.0-rc-146'
+    
+    repositories {
+        mavenCentral()
+//        maven { url "https://dl.bintray.com/kotlin/kotlin-dev" }
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+//        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.2.70'
+//    id 'org.jetbrains.kotlin.jvm' version '1.3.0-rc-146'
     id 'maven-publish'
 }
+apply plugin: "kotlin"
 
 allprojects {
     repositories {
         mavenCentral()
 //        maven { url "http://dl.bintray.com/kotlin/kotlin-dev" }
-//        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
     }
     dependencies {
-//        compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.0-rc-146"
-        compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.70"
+        compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.0-rc-146"
+        compile "org.jetbrains.kotlin:kotlin-reflect:1.3.0-rc-146"
         testCompile 'org.junit.jupiter:junit-jupiter-api:5.2.0'
         testCompile 'io.kotlintest:kotlintest-runner-junit5:3.1.6'
     }
@@ -41,7 +56,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'de.hdc.measure'
             artifactId = 'measure'
-            version = '1.1'
+            version = '1.3'
 
             from components.java
         }
