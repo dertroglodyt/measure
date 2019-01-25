@@ -4,4 +4,7 @@
     <option name="BUILD_PROCESS_HEAP_SIZE" value="1000" />
     <bytecodeTargetLevel target="10" />
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_STRING" value="-Xplugin:&quot;Manifold strings&quot; " />
+  </component>
 </project>

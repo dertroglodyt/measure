@@ -86,11 +86,11 @@ class ExtensionsTest: FreeSpec() {
     }
 
     "div" {
-      error("not implemented")
+      TODO("not implemented")
     }
 
     "times" {
-      error("not implemented")
+      TODO("not implemented")
     }
   }
 }
