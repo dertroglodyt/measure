@@ -1,7 +1,15 @@
 package de.hdc.measure
 
+import ch.obermuhlner.math.big.*
+import ch.obermuhlner.math.big.kotlin.*
 import java.util.*
 import kotlin.math.roundToInt
+
+fun BigFloat.approximates(other: BigFloat, maxDiff: BigFloat): Boolean {
+  return (this.isEqual(other)
+      || (other.isLessThan(this + maxDiff) && other.isGreaterThan(this - maxDiff))
+      )
+}
 
 /**
  * Ignores last to decimal digits when comparing for equal.

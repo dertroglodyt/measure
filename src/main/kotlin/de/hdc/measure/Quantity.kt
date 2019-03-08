@@ -95,4 +95,16 @@ data class Quantity(
             , K - q.K
             , s - q.s)
   }
+
+  fun reciprocal(): Quantity {
+    return Quantity(
+      mol * -1,
+      A * -1,
+      m * -1,
+      Cd * -1,
+      kg * -1,
+      K * -1,
+      s * -1
+    )
+  }
 }

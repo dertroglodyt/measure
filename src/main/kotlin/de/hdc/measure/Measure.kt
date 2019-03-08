@@ -1,10 +1,10 @@
 package de.hdc.measure
 
-import com.danneu.result.Result
+import ch.obermuhlner.math.big.kotlin.*
 
-fun measureFrom(value: String): Result<*, *> {
-  throw NotImplementedError()
   //TODO
+//fun <T: BaseUnit>measureFrom(value: String): Result<Measure<T>, *> {
+//  throw NotImplementedError()
 //    var v = value
   // numeric value
 //    if (v.indexOf(" ") < 0) {
@@ -14,7 +14,7 @@ fun measureFrom(value: String): Result<*, *> {
   // Prefix
   // Unit
 //  return Result.ok(value)
-}
+//}
 
 /*
  * Combines a value with a physical unit.
@@ -124,8 +124,8 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>)
     if (value == Double.NaN) {
       throw NumberFormatException("Division input is not a number! ${toString()} convertTo $measureUnit")
     }
-    val r = (toDouble() - unit.increment) / measureUnit.prefix.multiplier /
-            measureUnit.multiplier + measureUnit.increment
+    val r = (toDouble() - unit.increment.toDouble()) / measureUnit.prefix.multiplier.toDouble() /
+            measureUnit.multiplier.toDouble() + measureUnit.increment.toDouble()
     when (r) {
       Double.POSITIVE_INFINITY -> {
         throw NumberFormatException("Division overflow! PI ${toString()} convertTo $measureUnit")
@@ -140,7 +140,7 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>)
     }
   }
 
-  fun reciprocal(): Measure<T> {
+  fun reciprocal(): Measure<SI_COMBINED> {
     if (value.testInvalid()) {
       throw NumberFormatException("Division overflow! 1/${toString()}")
     }
@@ -150,7 +150,7 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>)
     if (r.testInvalid()) {
       throw NumberFormatException("Division overflow! 1/${toString()}")
     }
-    return Measure(r, unit)
+    return Measure(r, unit.reciprocal())
   }
 
   fun inverse(): Measure<T> {
@@ -176,7 +176,7 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>)
       throw NumberFormatException("Addition overflow! ${toString()} + $measure")
     }
 
-    val r: Double = value.plus(measure.toDouble().div(unit.prefix.multiplier))
+    val r: Double = value.plus(measure.toDouble().div(unit.prefix.multiplier.toDouble()))
 
     if (r.testInvalid()) {
       throw NumberFormatException("Addition overflow! ${toString()} + $measure")
@@ -194,7 +194,7 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>)
       throw NumberFormatException("Subtraction overflow! ${toString()} + $measure")
     }
 
-    val r: Double = value.minus(measure.toDouble().div(unit.prefix.multiplier))
+    val r: Double = value.minus(measure.toDouble().div(unit.prefix.multiplier.toDouble()))
 
 
     if (r.testInvalid()) {
@@ -340,12 +340,12 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>)
     var p = prefix
     if ((Math.abs(v) < 1.0) && (v != 0.0)) {
       while ((Math.abs(v) < 1.0) && (!p.isLast())) {
-        v *= (p.up().multiplier / p.multiplier)
+        v *= (p.up().multiplier / p.multiplier).toDouble()
         p = p.down()
       }
     } else if (Math.abs(v) >= 1000.0){
       while ((Math.abs(v) >= 1000.0) && (!p.isLast())) {
-        v /= (p.up().multiplier / p.multiplier)
+        v /= (p.up().multiplier / p.multiplier).toDouble()
         p = p.up()
       }
     }
@@ -389,7 +389,7 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>)
           Double.MAX_VALUE -> return Double.MAX_VALUE
           Double.MIN_VALUE -> return Double.MIN_VALUE
           Double.NaN -> return Double.NaN
-          else -> return value.times(unit.prefix.multiplier).times(unit.multiplier)
+          else -> return value.times(unit.prefix.multiplier.toDouble()).times(unit.multiplier.toDouble())
       }
   }
 
