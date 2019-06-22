@@ -3,7 +3,27 @@ package de.hdc.measure
 import ch.obermuhlner.math.big.*
 import ch.obermuhlner.math.big.kotlin.*
 import java.util.*
-import kotlin.math.roundToInt
+import kotlin.math.*
+
+@Deprecated(
+  level = DeprecationLevel.WARNING,
+  message = "Use Measure as a replacement for Float. Bsp.: val d = 2.0 k g",
+  replaceWith = ReplaceWith(
+    "Measure",
+    "de.hdc.measure.Measure"
+  )
+)
+class Float
+
+@Deprecated(
+  level = DeprecationLevel.WARNING,
+  message = "Use Measure as a replacement for Short. Bsp.: val d = 2.0 k g",
+  replaceWith = ReplaceWith(
+    "Measure",
+    "de.hdc.measure.Measure"
+  )
+)
+class Short
 
 fun BigFloat.approximates(other: BigFloat, maxDiff: BigFloat): Boolean {
   return (this.isEqual(other)
@@ -14,11 +34,11 @@ fun BigFloat.approximates(other: BigFloat, maxDiff: BigFloat): Boolean {
 /**
  * Ignores last to decimal digits when comparing for equal.
  */
-infix fun Double.aproximates(x: Double): Boolean  {
+infix fun Double.aproximates(x: Double): Boolean {
   return (this == x) || ((x < this + 1e-14) && (x > this - 1e-14))
 }
 
-fun Double.aproximates(x: Double, maxDiff: Double): Boolean  {
+fun Double.aproximates(x: Double, maxDiff: Double): Boolean {
   return (this == x) || ((x < this + maxDiff) && (x > this - maxDiff))
 }
 
@@ -28,7 +48,7 @@ fun Double.format(digits: Int = 3): String {
     (invalid) -> this.toString()
     (digits < 0) -> throw IllegalArgumentException("Digit count can not be negativ! <$digits>")
     else -> {
-      var s = java.lang.String.format(Locale.GERMANY, "%.${digits}f", this)
+      var s = String.format(Locale.GERMANY, "%.${digits}f", this)
 
       // insert thousand spacer
       val x = s.indexOf(',')
@@ -63,40 +83,15 @@ fun Double.format(digits: Int = 3): String {
 fun Double.testInvalid(): Boolean {
   // "euqals" not replaceable by "=="
   return ((this.equals(Double.POSITIVE_INFINITY))
-          || (this.equals(Double.NEGATIVE_INFINITY))
-          || (this.equals(Double.MAX_VALUE))
-          || (this.equals(Double.MIN_VALUE))
-          || (this.equals(Double.NaN)))
+      || (this.equals(Double.NEGATIVE_INFINITY))
+      || (this.equals(Double.MAX_VALUE))
+      || (this.equals(Double.MIN_VALUE))
+      || (this.equals(Double.NaN)))
 }
 
-operator fun <T : BaseUnit> Double.div(measure: Measure<T>): Measure<T> {
-  if (measure.value == 0.0) {
-    throw ArithmeticException("Division by zero! ${toString()}/$measure")
-  }
-  if (this.testInvalid() || measure.value.testInvalid()) {
-    throw IllegalArgumentException("Illegal argument! ${toString()} + $measure")
-  }
+// Double / Measure doesnt make much sense.
+//operator fun <T : BaseUnit> Double.div(measure: Measure<SI_COMBINED>): Measure<T> =
+//  Measure(this, Prefix.NONE, UNITLESS) / measure.value
 
-  val r: Double = this / measure.value
-
-  if (r.testInvalid()) {
-    throw ArithmeticException("Division overflow! ${toString()}/$measure")
-  }
-
-  return Measure(r, measure.unit)
-}
-
-operator fun <T : BaseUnit> Double.times(measure: Measure<T>): Measure<T> {
-  if (this.testInvalid() || measure.value.testInvalid()) {
-    throw IllegalArgumentException("Illegal argument! ${toString()} + $measure")
-  }
-
-  val r: Double = this * measure.value
-
-  if (r.testInvalid()) {
-    throw ArithmeticException("Division overflow! ${toString()}/$measure")
-  }
-
-  return Measure(r, measure.unit)
-}
+operator fun <T : BaseUnit> Double.times(measure: Measure<T>): Measure<T> = measure.times(this)
 

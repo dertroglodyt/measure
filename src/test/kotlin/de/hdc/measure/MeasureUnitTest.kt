@@ -4,7 +4,7 @@ import de.hdc.measure.Prefix.*
 import io.kotlintest.*
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
-import io.kotlintest.matchers.plusOrMinus
+import io.kotlintest.matchers.doubles.*
 import io.kotlintest.properties.Gen
 import io.kotlintest.specs.FreeSpec
 
@@ -14,14 +14,20 @@ class MeasureUnitTest: FreeSpec() {
   init {
     "Random values".config(timeout = 10.seconds) {
       forAll(Gen.double().random().take(10).toList()) { v: Double ->
-        Measure(v, t).toDouble() shouldBe((1000.0 * v) plusOrMinus 1e-16)
+        Measure(v, t).toDouble() shouldBe((1000.0 * v) plusOrMinus 1e-12)
       }
     }
 
     "Conversions" {
-      360 ˍ `°` shouldBe ((2.0*Math.PI) ˍ rad)
+      (360 ˍ `°`).convertTo(rad).toDouble() shouldBe(((2.0*Math.PI) ˍ rad).toDouble() plusOrMinus 1e-15)
       (10.0 k `°C`).convertTo(K) shouldBe (10273.15 ˍ K)
+      (9726.85 ˍ `°C`).convertTo(K) shouldBe (10000.0 ˍ K)
       (1.0 ˍ `°C`) shouldNotBe (1.0 ˍ K)
+
+      (10.0 k K).convertTo(`°C`) shouldBe (10273.15 ˍ `°C`)
+      (10273.15 ˍ K).convertTo(K) shouldBe (9726.85 ˍ `°C`)
+      (1.0 ˍ K) shouldNotBe (1.0 ˍ `°C`)
+
       ((60*60*24) ˍ s) shouldBe (1 ˍ d)
       (1 ˍ d).convertTo(s) shouldBe (86400 ˍ s)
       (1 ˍ d).convertTo(s) shouldNotBe (86401 ˍ s)

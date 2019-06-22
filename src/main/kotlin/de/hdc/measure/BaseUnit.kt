@@ -9,6 +9,8 @@ sealed class BaseUnit(val quantity: Quantity) {
 // SI Units
 class SI_COMBINED(q: Quantity) : BaseUnit(q)
 
+class SI_FLUX(q: Quantity) : BaseUnit(q)
+
 object SI_UNITLESS : BaseUnit(Quantity())
 object SI_MOLE : BaseUnit(Quantity(mol = 1))
 object SI_AMPERE : BaseUnit(Quantity(A = 1))

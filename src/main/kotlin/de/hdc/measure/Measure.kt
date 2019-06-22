@@ -1,9 +1,13 @@
 package de.hdc.measure
 
+import ch.obermuhlner.math.big.*
+import ch.obermuhlner.math.big.BigFloat.*
 import ch.obermuhlner.math.big.kotlin.*
+import kotlin.Float
+import kotlin.Short
 
-  //TODO
-//fun <T: BaseUnit>measureFrom(value: String): Result<Measure<T>, *> {
+//TODO
+//fun <T : BaseUnit> bigMeasureFrom(value: String): Result<Measure<T>, *> {
 //  throw NotImplementedError()
 //    var v = value
   // numeric value
@@ -19,26 +23,32 @@ import ch.obermuhlner.math.big.kotlin.*
 /*
  * Combines a value with a physical unit.
  */
-data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>)
-  : Number(), Comparable<Measure<T>> {
+data class Measure<T : BaseUnit>(
+  val value: BigFloat,
+  val unit: MeasureUnit<T>
+) : Number(), Comparable<Measure<T>> {
 
-  constructor (value: Double, prefix: Prefix, unit: MeasureUnit<T>)
-          : this(value, MeasureUnit(prefix, unit))
+  constructor (
+    value: Double,
+    prefix: Prefix = Prefix.NONE,
+    unit: MeasureUnit<T>
+  )
+      : this(defaultContext.valueOf(value), MeasureUnit(prefix, unit))
+
+  constructor (
+    value: Double,
+    unit: MeasureUnit<T>
+  )
+      : this(defaultContext.valueOf(value), MeasureUnit(Prefix.NONE, unit))
 
   companion object {
+    val defaultContext: BigFloat.Context =
+      context(42) ?: error("Could not initialize math context!")
     val ZERO = Measure(0.0, UNITLESS)
     val ONE = Measure(1.0, UNITLESS)
-    val MIN_VALUE = Measure(Double.MIN_VALUE, UNITLESS)
-    val MAX_VALUE = Measure(Double.MAX_VALUE, UNITLESS)
-//    val POSITIVE_INFINITY = Measure(Double.POSITIVE_INFINITY, MeasureUnit(Prefix.NONE
-//            , "POSITIVE_INFINITY", "POSITIVE_INFINITY", SI_COMBINED(Quantity())))
-//    val NEGATIVE_INFINITY = Measure(Double.NEGATIVE_INFINITY, MeasureUnit(Prefix.NONE
-//            , "NEGATIVE_INFINITY", "NEGATIVE_INFINITY", SI_COMBINED(Quantity())))
-//    val NaN = Measure(Double.NaN, MeasureUnit(Prefix.NONE
-//            , "NaN", "NaN", SI_COMBINED(Quantity())))
-    val POSITIVE_INFINITY = Measure(Double.POSITIVE_INFINITY, COMBINED(Quantity()))
-    val NEGATIVE_INFINITY = Measure(Double.NEGATIVE_INFINITY, COMBINED(Quantity()))
-    val NaN = Measure(Double.NaN, COMBINED(Quantity()))
+    val MINUS_ONE = Measure(-1.0, UNITLESS)
+    val ONE_THAUSEND = Measure(1000.0, UNITLESS)
+//    val NaN = Measure(Double.NaN, unit = COMBINED(Quantity()))
   }
 
   private fun getQuantity(): Quantity {
@@ -47,32 +57,32 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>)
 
   //todo
   /**
-//  fun <U : T> convertTo(measureUnit: MeasureUnit<U>): Measure<U> {
-//    if (measureUnit == unit) {
-//      return Measure(value, measureUnit)
-//    }
-//    if (value == Double.NaN) {
-//      LOG.warning("Division input is not a number! ${toString()} convertTo $measureUnit")
-//      throw NumberFormatException()
-//    }
-//    val r: Double = toDouble() / measureUnit.prefix.multiplier / measureUnit.unit.multiplier
-//      when (r) {
-//          Double.POSITIVE_INFINITY -> {
-//              LOG.warning("Division overflow! PI ${toString()} convertTo $measureUnit")
-//              throw NumberFormatException()
-//          }
-//          Double.NEGATIVE_INFINITY -> {
-//              LOG.warning("Division overflow! NI ${toString()} convertTo $measureUnit")
-//              throw NumberFormatException()
-//          }
-//          Double.NaN -> {
-//              LOG.warning("Division result is not a number! ${toString()} convertTo $measureUnit")
-//              throw NumberFormatException()
-//          }
-//          else -> return Measure(r, measureUnit)
-//      }
-//  }
-*/
+  //  fun <U : T> convertTo(measureUnit: MeasureUnit<U>): Measure<U> {
+  //    if (measureUnit == unit) {
+  //      return Measure(value, measureUnit)
+  //    }
+  //    if (value == Double.NaN) {
+  //      LOG.warning("Division input is not a number! ${toString()} convertTo $measureUnit")
+  //      throw NumberFormatException()
+  //    }
+  //    val r: Double = toDouble() / measureUnit.prefix.multiplier / measureUnit.unit.multiplier
+  //      when (r) {
+  //          Double.POSITIVE_INFINITY -> {
+  //              LOG.warning("Division overflow! PI ${toString()} convertTo $measureUnit")
+  //              throw NumberFormatException()
+  //          }
+  //          Double.NEGATIVE_INFINITY -> {
+  //              LOG.warning("Division overflow! NI ${toString()} convertTo $measureUnit")
+  //              throw NumberFormatException()
+  //          }
+  //          Double.NaN -> {
+  //              LOG.warning("Division result is not a number! ${toString()} convertTo $measureUnit")
+  //              throw NumberFormatException()
+  //          }
+  //          else -> return Measure(r, measureUnit)
+  //      }
+  //  }
+   */
 
   override fun equals(other: Any?): Boolean {
     if (other !is Measure<*>) {
@@ -82,220 +92,93 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>)
       return false
     }
     if (unit == other.unit) {
-      return value == other.value
+      return value.isEqual(other.value)
     }
-    return toDouble() == other.convertTo(this.unit).toDouble()
+    return convertTo(other.unit).value.isEqual(other.value)
+//    return toDouble() == other.convertTo(this.unit).toDouble()
   }
 
   override fun hashCode(): Int {
     return super.hashCode()
   }
 
-  infix fun aproximates(other: Any?): Boolean {
-    if (other !is Measure<*>) {
-      return false
-    }
-    if (!unit.isEquivalentTo(other.unit)) {
-      return false
-    }
-    if (unit == other.unit) {
-      return value aproximates other.value
-    }
-    return toDouble() aproximates other.convertTo(this.unit).toDouble()
-  }
+//  infix fun aproximates(other: Any?): Boolean {
+//    if (other !is Measure<*>) {
+//      return false
+//    }
+//    if (!unit.isEquivalentTo(other.unit)) {
+//      return false
+//    }
+//    if (unit == other.unit) {
+//      return value aproximates other.value
+//    }
+//    return value aproximates other.convertTo(unit)
+//  }
 
-  fun aproximates(other: Measure<T>, maxDiff: Measure<T>): Boolean {
+  fun aproximates(other: Measure<T>, maxDiff: Measure<SI_UNITLESS>): Boolean {
     if (!unit.isEquivalentTo(other.unit)) {
       return false
     }
     if (unit == other.unit) {
-      return value.aproximates(other.value, maxDiff.convertTo(other.unit).value)
+      return value.approximates(other.value, maxDiff.value)
     }
-    return toDouble().aproximates(other.convertTo(this.unit).toDouble(), maxDiff.convertTo(this.unit).value)
+    return value.approximates(other.convertTo(unit).value, maxDiff.value)
   }
 
   fun <U : BaseUnit> convertTo(measureUnit: MeasureUnit<U>): Measure<U> {
     if (measureUnit == unit) {
-      return Measure(value, measureUnit)
+      // Don't create a copy of this Measure
+//      return Measure(value, measureUnit)
+      @Suppress("UNCHECKED_CAST")
+      return this as Measure<U>
     }
-    if (! measureUnit.isEquivalentTo(this.unit)) {
+    if (!measureUnit.isEquivalentTo(this.unit)) {
       throw java.lang.IllegalArgumentException("Inconvertible units! ${toString()} convertTo $measureUnit")
     }
-    if (value == Double.NaN) {
-      throw NumberFormatException("Division input is not a number! ${toString()} convertTo $measureUnit")
-    }
-    val r = (toDouble() - unit.increment.toDouble()) / measureUnit.prefix.multiplier.toDouble() /
-            measureUnit.multiplier.toDouble() + measureUnit.increment.toDouble()
-    when (r) {
-      Double.POSITIVE_INFINITY -> {
-        throw NumberFormatException("Division overflow! PI ${toString()} convertTo $measureUnit")
-      }
-      Double.NEGATIVE_INFINITY -> {
-        throw NumberFormatException("Division overflow! NI ${toString()} convertTo $measureUnit")
-      }
-      Double.NaN -> {
-        throw NumberFormatException("Division result is not a number! ${toString()} convertTo $measureUnit")
-      }
-      else -> return Measure(r, measureUnit)
-    }
+    // TODO multiply by unit.prefix.multiplier and unit.multiplier?
+    val r = value
+      .times(unit.prefix.multiplier)
+      .subtract(unit.increment)
+      .times(unit.multiplier)
+
+      .div(measureUnit.multiplier)
+      .plus(measureUnit.increment)
+      .div(measureUnit.prefix.multiplier)
+    return Measure(r, measureUnit)
   }
 
-  fun reciprocal(): Measure<SI_COMBINED> {
-    if (value.testInvalid()) {
-      throw NumberFormatException("Division overflow! 1/${toString()}")
-    }
 
-    val r: Double = 1.0.div(value)
+  fun reciprocal(): Measure<SI_COMBINED> = Measure(ONE.value.div(value), unit.reciprocal())
 
-    if (r.testInvalid()) {
-      throw NumberFormatException("Division overflow! 1/${toString()}")
-    }
-    return Measure(r, unit.reciprocal())
-  }
+  fun inverse(): Measure<T> = Measure(value.times(MINUS_ONE.value), unit)
 
-  fun inverse(): Measure<T> {
-    if (value.testInvalid()) {
-      throw NumberFormatException("Multiplication overflow! -1*${toString()}")
-    }
+  operator fun <U : T> plus(measure: Measure<U>): Measure<T>
+      = Measure(value + measure.convertTo(unit).value, unit)
 
-    val r: Double = value.times(-1.0)
+  operator fun <U : T> minus(measure: Measure<U>): Measure<T>
+      = Measure(value - measure.convertTo(unit).value, unit)
 
-    if (r.testInvalid()) {
-      throw NumberFormatException("Multiplication overflow! -1*${toString()}")
-    }
-
-    return Measure(r, unit)
-  }
-
-  operator fun <U : T> plus(measure: Measure<U>): Measure<T> {
-    if (measure.unit == unit) {
-      val m: Double = value.plus(measure.value)
-      return Measure(m, unit)
-    }
-    if (value.testInvalid() || measure.value.testInvalid()) {
-      throw NumberFormatException("Addition overflow! ${toString()} + $measure")
-    }
-
-    val r: Double = value.plus(measure.toDouble().div(unit.prefix.multiplier.toDouble()))
-
-    if (r.testInvalid()) {
-      throw NumberFormatException("Addition overflow! ${toString()} + $measure")
-    }
-
-    return Measure(r, unit)
-  }
-
-  operator fun <U : T> minus(measure: Measure<U>): Measure<T> {
-    if (measure.unit == unit) {
-      val m: Double = value.minus(measure.value)
-      return Measure(m, unit)
-    }
-    if (value.testInvalid() || measure.value.testInvalid()) {
-      throw NumberFormatException("Subtraction overflow! ${toString()} + $measure")
-    }
-
-    val r: Double = value.minus(measure.toDouble().div(unit.prefix.multiplier.toDouble()))
-
-
-    if (r.testInvalid()) {
-      throw NumberFormatException("Subtraction overflow! ${toString()} + $measure")
-    }
-
-    return Measure(r, unit)
-  }
-
-  fun scalar(measure: Measure<SI_UNITLESS>): Measure<T> {
-    if (value.testInvalid() || measure.value.testInvalid()) {
-      throw NumberFormatException("Multiplication overflow! ${toString()} + $measure")
-    }
-
-    val r = value.times(measure.toDouble())
-
-    if (r.testInvalid()) {
-      throw NumberFormatException("Multiplication overflow! ${toString()} + $measure")
-    }
-
-    return Measure(r, unit)
-  }
+  fun scalarTimes(measure: Measure<SI_UNITLESS>): Measure<T>
+      = Measure(fromBaseUnit(toBaseUnit() * measure.toBaseUnit()), unit)
 
   operator fun <U : BaseUnit> times(measure: Measure<U>): Measure<SI_COMBINED> {
-    if (value.testInvalid() || measure.value.testInvalid()) {
-      throw NumberFormatException("Multiplication overflow! ${toString()} + $measure")
-    }
-
-    val r = toDouble().times(measure.toDouble())
-
-    if (r.testInvalid()) {
-//      LOG.warning("Multiplication overflow! ${toString()} * $measure")
-      return POSITIVE_INFINITY
-    }
-
     val mu = COMBINED(getQuantity() * measure.getQuantity())
-    return Measure(r, mu)
+    return Measure(fromBaseUnit(toBaseUnit() * measure.toBaseUnit()), mu)
   }
 
-  operator fun times(scalar: Double): Measure<T> {
-    if (value.testInvalid()) {
-      throw NumberFormatException("Multiplication overflow! ${toString()} * $scalar")
-    }
+  operator fun times(scalar: Double): Measure<T> = Measure(value.times(scalar), unit)
 
-    val r = value.times(scalar)
+  fun scalarDiv(measure: Measure<SI_UNITLESS>): Measure<T>
+      = Measure(fromBaseUnit(toBaseUnit() / measure.toBaseUnit()), unit)
 
-    if (r.testInvalid()) {
-      throw NumberFormatException("Multiplication overflow! ${toString()} * $scalar")
-    }
+//  operator fun div(measure: Measure<T>): BigFloat {
+//    return toBaseUnit() / measure.toBaseUnit()
+//  }
 
-    return Measure(r, unit)
-  }
-
-  operator fun div(measure: Measure<T>): Double {
-    if (measure.value == 0.0) {
-//      LOG.warning("Division by zero! ${toString()}/$measure")
-      return Double.NaN
-    }
-    if (value.testInvalid() || measure.value.testInvalid()) {
-      throw NumberFormatException("Division overflow! ${toString()} + $measure")
-    }
-    if (this.unit is COMBINED) {
-      throw NumberFormatException("COMBINED / COMBINED! ${toString()} + $measure")
-    }
-
-    return toDouble().div(measure.toDouble())
-  }
-
-  operator fun div(x: Double): Measure<T> {
-    if (x == 0.0) {
-      throw ArithmeticException("Division by zero! ${toString()}/$x")
-    }
-    if (value.testInvalid() || x.testInvalid()) {
-      throw NumberFormatException("Division overflow! ${toString()} + $x")
-    }
-
-    val r = toDouble().div(x)
-
-    if (r.testInvalid()) {
-      throw ArithmeticException("Division overflow! ${toString()}/$x")
-    }
-
-    return Measure(r, unit)
-  }
+  operator fun div(x: Double): Measure<T> = Measure(value / x, unit)
 
   operator fun <U : BaseUnit> div(measure: Measure<U>): Measure<SI_COMBINED> {
-    if (measure.value == 0.0) {
-//      LOG.warning("Division by zero! ${toString()}/$measure")
-      return NaN
-    }
-    if (value.testInvalid() || measure.value.testInvalid()) {
-      throw NumberFormatException("Division overflow! ${toString()} + $measure")
-    }
-
-    val r = toDouble().div(measure.toDouble())
-
-    if (r.testInvalid()) {
-//      LOG.warning("Division overflow! ${toString()}/$measure")
-      return POSITIVE_INFINITY
-    }
-
+    val r = toBaseUnit() * measure.toBaseUnit()
     val mu = COMBINED(getQuantity() / measure.getQuantity())
     return Measure(r, mu)
   }
@@ -321,7 +204,7 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>)
       v = result.first
       p = p.setPrefix(result.second)
     }
-    var s = v.format(decimals)
+    var s = v.toDouble().format(decimals)
     var x = s.indexOf(',')
     if (x < 0) {
       x = s.length
@@ -335,17 +218,17 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>)
     return s + if (p.toString().isEmpty()) "" else " " + p.toString().replace("Mg", "t")
   }
 
-  private fun findOptimalPrefix(value: Double, prefix: Prefix): Pair<Double, Prefix> {
+  private fun findOptimalPrefix(value: BigFloat, prefix: Prefix): Pair<BigFloat, Prefix> {
     var v = value
     var p = prefix
-    if ((Math.abs(v) < 1.0) && (v != 0.0)) {
-      while ((Math.abs(v) < 1.0) && (!p.isLast())) {
-        v *= (p.up().multiplier / p.multiplier).toDouble()
+    if (BigFloat.abs(v).isLessThan(ONE.value) && (v != ZERO)) {
+      while (BigFloat.abs(v).isLessThan(ONE.value) && (!p.isLast())) {
+        v *= (p.up().multiplier / p.multiplier)
         p = p.down()
       }
-    } else if (Math.abs(v) >= 1000.0){
-      while ((Math.abs(v) >= 1000.0) && (!p.isLast())) {
-        v /= (p.up().multiplier / p.multiplier).toDouble()
+    } else if (BigFloat.abs(v).isGreaterThanOrEqual(ONE_THAUSEND.value)) {
+      while (BigFloat.abs(v).isGreaterThanOrEqual(ONE_THAUSEND.value) && (!p.isLast())) {
+        v /= (p.up().multiplier / p.multiplier)
         p = p.up()
       }
     }
@@ -353,7 +236,7 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>)
   }
 
   override fun toString(): String {
-    return value.toString() + if (unit.toString().isEmpty()) "" else " " + unit.toString()
+    return value.toString() + if (unit.toString().isEmpty()) "" else " $unit"
 //    return format(optimize = false, padding = 0)
   }
 
@@ -369,29 +252,18 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>)
     return toDouble().toChar()
   }
 
+  private fun fromBaseUnit(x: BigFloat): BigFloat {
+    return ((x / unit.multiplier) + unit.increment) / unit.prefix.multiplier
+  }
+
+  private fun toBaseUnit(): BigFloat {
+    return ((value * unit.prefix.multiplier) - unit.increment) * unit.multiplier
+  }
+
   /**
    * Converts value in base units convertTo a Double.
    */
-  override fun toDouble(): Double {
-      when (value) {
-          Double.POSITIVE_INFINITY -> {
-//              LOG.warning("POSITIVE_INFINITY! ${toString()}")
-              return Double.POSITIVE_INFINITY
-          }
-          Double.NEGATIVE_INFINITY -> {
-//              LOG.warning("NEGATIVE_INFINITY! ${toString()}")
-              return Double.NEGATIVE_INFINITY
-          }
-          Double.NaN -> {
-//              LOG.warning("NaN! ${toString()}")
-              return Double.NaN
-          }
-          Double.MAX_VALUE -> return Double.MAX_VALUE
-          Double.MIN_VALUE -> return Double.MIN_VALUE
-          Double.NaN -> return Double.NaN
-          else -> return value.times(unit.prefix.multiplier.toDouble()).times(unit.multiplier.toDouble())
-      }
-  }
+  override fun toDouble(): Double = toBaseUnit().toDouble()
 
   override fun toFloat(): Float {
     return toDouble().toFloat()
@@ -407,6 +279,10 @@ data class Measure<T : BaseUnit> (val value: Double, val unit: MeasureUnit<T>)
 
   override fun toShort(): Short {
     return toDouble().toShort()
+  }
+
+  fun asFlux(): Measure<SI_FLUX> {
+    return Measure(value, Flux(unit))
   }
 }
 
