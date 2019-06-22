@@ -281,7 +281,7 @@ data class Measure<T : BaseUnit>(
     return toDouble().toShort()
   }
 
-  fun asFlux(): Measure<SI_FLUX> {
+  fun asFlux(): Measure<SI_FLUX<T>> {
     return Measure(value, Flux(unit))
   }
 }

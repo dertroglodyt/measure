@@ -6,6 +6,8 @@ import io.kotlintest.*
 import io.kotlintest.matchers.doubles.*
 import io.kotlintest.specs.*
 import org.junit.jupiter.api.Assertions.*
+import kotlin.Float
+import kotlin.Short
 
 internal class MeasureTest : FreeSpec() {
 
@@ -18,12 +20,12 @@ internal class MeasureTest : FreeSpec() {
 
     "deprecate float and double" {
       shouldThrowExactly<IllegalAccessException> {
-        val f = 1.0f
+        val f: Float = 1.0f
         println("Should not print! $f")
       }
 
       shouldThrowExactly<IllegalAccessException> {
-        val d = 2.1
+        val d: Short = 2.toShort()
         println("Should not print! $d")
       }
     }

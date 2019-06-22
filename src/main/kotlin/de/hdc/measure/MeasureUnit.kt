@@ -98,10 +98,10 @@ class COMBINED(q: Quantity) :
 
 object UNITLESS : MeasureUnit<SI_UNITLESS>(NONE, "", "", SI_UNITLESS)
 
-class Flux<T : MeasureUnit<BaseUnit>>(unit: T) :
-  MeasureUnit<SI_FLUX>(
+class Flux<B : BaseUnit>(unit: MeasureUnit<B>) :
+  MeasureUnit<SI_FLUX<B>>(
     unit.prefix, "${unit.name} Flux", "${unit.symbol}/s"
-    , SI_FLUX(Quantity(s = -1).times(unit.baseUnit.quantity))
+    , SI_FLUX<B>(Quantity(s = -1).times(unit.baseUnit.quantity))
   )
 
 object mol : MeasureUnit<SI_MOLE>(NONE, "Mole", "SI_MOLE", SI_MOLE)
