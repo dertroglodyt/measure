@@ -135,6 +135,7 @@ object pcs : MeasureUnit<SI_PCS>(NONE, "pieces", "pcs", SI_PCS)
 object Pa : MeasureUnit<SI_PASCAL>(NONE, "Pascal", "PA", SI_PASCAL)
 object J : MeasureUnit<SI_JOULE>(NONE, "Joule", "NumberName", SI_JOULE)
 object W : MeasureUnit<SI_WATT>(NONE, "Watt", "W", SI_WATT)
+object C : MeasureUnit<SI_COULOMB>(NONE, "Coulomb", "C", SI_COULOMB)
 //Other
 object min : MeasureUnit<SI_SECOND>(
   NONE, "Minute", "min", SI_SECOND,
