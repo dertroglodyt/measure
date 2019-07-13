@@ -62,6 +62,15 @@ open class MeasureUnit<out T : BaseUnit>(
   fun reciprocal(): MeasureUnit<SI_COMBINED> {
     return COMBINED(baseUnit.quantity.reciprocal())
   }
+
+  operator fun times(other: MeasureUnit<BaseUnit>): MeasureUnit<SI_COMBINED> {
+    return COMBINED(baseUnit.quantity.times(other.baseUnit.quantity))
+  }
+
+  operator fun div(other: MeasureUnit<BaseUnit>): MeasureUnit<SI_COMBINED> {
+    return COMBINED(baseUnit.quantity.times(other.baseUnit.quantity.reciprocal()))
+  }
+
 //  companion object mol: MeasureUnit<SI_MOLE>(NONE, "Mole", "SI_MOLE", SI_MOLE)
 
 }
