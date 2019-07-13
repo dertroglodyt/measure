@@ -6,8 +6,6 @@ import io.kotlintest.*
 import io.kotlintest.matchers.doubles.*
 import io.kotlintest.specs.*
 import org.junit.jupiter.api.Assertions.*
-import kotlin.Float
-import kotlin.Short
 
 internal class MeasureTest : FreeSpec() {
 
@@ -16,21 +14,13 @@ internal class MeasureTest : FreeSpec() {
   init {
     "numbers of different precision" {
       3.04 k g shouldBe Measure(context(15).valueOf("3.040"), MeasureUnit(k, g))
-    }
-
-    "deprecate float and double" {
-      shouldThrowExactly<IllegalAccessException> {
-        val f: Float = 1.0f
-        println("Should not print! $f")
-      }
-
-      shouldThrowExactly<IllegalAccessException> {
-        val d: Short = 2.toShort()
-        println("Should not print! $d")
-      }
+      (0.0 ˍ m) shouldBe (-0.0 ˍ m)
     }
 
     "main" {
+      (1 k m2).convertTo(m2) shouldBe (1_000_000 ˍ m2)
+      (1 k m3).convertTo(m3) shouldBe (1_000_000_000 ˍ m3)
+
       assertEquals(
         (1273.15 ˍ K).convertTo(`°C`).toDouble(),
         (1.0 k `°C`).toDouble(), 0.0001
@@ -124,8 +114,8 @@ internal class MeasureTest : FreeSpec() {
       assertEquals("3,123 kg", (3.12345 k g).format(padding = 0))
       assertEquals("   3,123 kg", (3.12345 k g).format())
 
-      assertEquals("  -0 kg", (-0.0 k g).format(0))
-      assertEquals("  -0 kg", (-0.0 k g).format(0, optimize = false))
+      assertEquals("   0 kg", (-0.0 k g).format(0))
+      assertEquals("   0 kg", (-0.0 k g).format(0, optimize = false))
       assertEquals("   3 kg", (3.12345 k g).format(0))
       assertEquals("   3,1 kg", (3.12345 k g).format(1))
       assertEquals("   3,123 5 kg", (3.12345 k g).format(4))
@@ -171,6 +161,7 @@ internal class MeasureTest : FreeSpec() {
     }
 
     "calculations" {
+      ((10.0 k g) / (5.0 ˍ g)) shouldBe (2000.0 ˍ UNITLESS)
       (((10.0 k g) / (5.0 ˍ g)) * (3 ˍ s)) shouldBe (6000.0 ˍ s)
       ((10.0 k g) / (5.0 ˍ g) * (3 ˍ s)).unit shouldBe s
       ((10.0 k g) / (5.0 ˍ g) * (3 ˍ s)).convertTo(min) shouldBe (100.0 ˍ min)

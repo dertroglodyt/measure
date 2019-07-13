@@ -5,26 +5,6 @@ import ch.obermuhlner.math.big.kotlin.*
 import java.util.*
 import kotlin.math.*
 
-@Deprecated(
-  level = DeprecationLevel.WARNING,
-  message = "Use Measure as a replacement for Float. Bsp.: val d = 2.0 k g",
-  replaceWith = ReplaceWith(
-    "Measure",
-    "de.hdc.measure.Measure"
-  )
-)
-class Float
-
-@Deprecated(
-  level = DeprecationLevel.WARNING,
-  message = "Use Measure as a replacement for Short. Bsp.: val d = 2.0 k g",
-  replaceWith = ReplaceWith(
-    "Measure",
-    "de.hdc.measure.Measure"
-  )
-)
-class Short
-
 fun BigFloat.approximates(other: BigFloat, maxDiff: BigFloat): Boolean {
   return (this.isEqual(other)
       || (other.isLessThan(this + maxDiff) && other.isGreaterThan(this - maxDiff))

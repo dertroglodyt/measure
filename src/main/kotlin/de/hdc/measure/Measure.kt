@@ -10,13 +10,13 @@ import kotlin.Short
 //fun <T : BaseUnit> bigMeasureFrom(value: String): Result<Measure<T>, *> {
 //  throw NotImplementedError()
 //    var v = value
-  // numeric value
+// numeric value
 //    if (v.indexOf(" ") < 0) {
 //        return Measure(Double.valueOf(v), UNITLESS)
 //    }
-  // Unitless
-  // Prefix
-  // Unit
+// Unitless
+// Prefix
+// Unit
 //  return Result.ok(value)
 //}
 
@@ -94,6 +94,12 @@ data class Measure<T : BaseUnit>(
     if (unit == other.unit) {
       return value.isEqual(other.value)
     }
+    // Catch special case -0.0 == 0.0
+    if (unit == other.unit) {
+      if ((value.toDouble() == 0.0) && (other.value.toDouble() == 0.0)) {
+        return true
+      }
+    }
     return convertTo(other.unit).value.isEqual(other.value)
 //    return toDouble() == other.convertTo(this.unit).toDouble()
   }
@@ -138,6 +144,20 @@ data class Measure<T : BaseUnit>(
     // TODO multiply by unit.prefix.multiplier and unit.multiplier?
     val r = value
       .times(unit.prefix.multiplier)
+      .let {
+        if (unit.baseUnit == SI_AREA) {
+          it.times(unit.prefix.multiplier)
+        } else {
+          it
+        }
+      }
+      .let {
+        if (unit.baseUnit == SI_VOLUME) {
+          it.times(unit.prefix.multiplier).times(unit.prefix.multiplier)
+        } else {
+          it
+        }
+      }
       .subtract(unit.increment)
       .times(unit.multiplier)
 
@@ -152,24 +172,24 @@ data class Measure<T : BaseUnit>(
 
   fun inverse(): Measure<T> = Measure(value.times(MINUS_ONE.value), unit)
 
-  operator fun <U : T> plus(measure: Measure<U>): Measure<T>
-      = Measure(value + measure.convertTo(unit).value, unit)
+  operator fun <U : T> plus(measure: Measure<U>): Measure<T> =
+    Measure(value + measure.convertTo(unit).value, unit)
 
-  operator fun <U : T> minus(measure: Measure<U>): Measure<T>
-      = Measure(value - measure.convertTo(unit).value, unit)
+  operator fun <U : T> minus(measure: Measure<U>): Measure<T> =
+    Measure(value - measure.convertTo(unit).value, unit)
 
-  fun scalarTimes(measure: Measure<SI_UNITLESS>): Measure<T>
-      = Measure(fromBaseUnit(toBaseUnit() * measure.toBaseUnit()), unit)
+  fun scalarTimes(measure: Measure<SI_UNITLESS>): Measure<T> =
+    Measure(fromBaseUnit(toBaseUnit() * measure.toBaseUnit()), unit)
 
   operator fun <U : BaseUnit> times(measure: Measure<U>): Measure<SI_COMBINED> {
     val mu = COMBINED(getQuantity() * measure.getQuantity())
-    return Measure(fromBaseUnit(toBaseUnit() * measure.toBaseUnit()), mu)
+    return Measure(toBaseUnit() * measure.toBaseUnit(), mu)
   }
 
   operator fun times(scalar: Double): Measure<T> = Measure(value.times(scalar), unit)
 
-  fun scalarDiv(measure: Measure<SI_UNITLESS>): Measure<T>
-      = Measure(fromBaseUnit(toBaseUnit() / measure.toBaseUnit()), unit)
+  fun scalarDiv(measure: Measure<SI_UNITLESS>): Measure<T> =
+    Measure(fromBaseUnit(toBaseUnit() / measure.toBaseUnit()), unit)
 
 //  operator fun div(measure: Measure<T>): BigFloat {
 //    return toBaseUnit() / measure.toBaseUnit()
@@ -178,7 +198,7 @@ data class Measure<T : BaseUnit>(
   operator fun div(x: Double): Measure<T> = Measure(value / x, unit)
 
   operator fun <U : BaseUnit> div(measure: Measure<U>): Measure<SI_COMBINED> {
-    val r = toBaseUnit() * measure.toBaseUnit()
+    val r = toBaseUnit() / measure.toBaseUnit()
     val mu = COMBINED(getQuantity() / measure.getQuantity())
     return Measure(r, mu)
   }
@@ -221,7 +241,7 @@ data class Measure<T : BaseUnit>(
   private fun findOptimalPrefix(value: BigFloat, prefix: Prefix): Pair<BigFloat, Prefix> {
     var v = value
     var p = prefix
-    if (BigFloat.abs(v).isLessThan(ONE.value) && (v != ZERO)) {
+    if (BigFloat.abs(v).isLessThan(ONE.value) && (! v.isEqual(ZERO.value))) {
       while (BigFloat.abs(v).isLessThan(ONE.value) && (!p.isLast())) {
         v *= (p.up().multiplier / p.multiplier)
         p = p.down()
